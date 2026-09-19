@@ -1,0 +1,71 @@
+{
+  "release": "20260919-ensemble-3 / official-ensemble-v2",
+  "scope": "FireWatch geospatial service on the four prepared official TRAIN validation scenes, including real AF/BS inference, public UI/API, GeoJSON/JSON/mask exports and operational rollback. Competition submission scoring/report/presentation are separate model/project deliverables.",
+  "profile": "web-service",
+  "target_environments": [
+    "Ubuntu 22.04 / Python 3.10.12 CPU app server, public HTTPS through nginx and SSH relay"
+  ],
+  "verdict": "PASS",
+  "generated_at": "2026-09-19T13:04:42.923509+00:00",
+  "source_report_sha256": "3d68a21e82c832d6b926c3b0877169b6a75ff959976542e2ae913540b077dd46",
+  "scope_note": "Compact publication copy of the local service release gate. Raw inputs and server credentials are excluded. This does not claim private-test quality or unrestricted production readiness.",
+  "gates": [
+    {
+      "id": "build",
+      "status": "pass",
+      "observations": [
+        "27 tests passed; syntax passed. Later commits changed HEAD but every declared candidate source retains its checked SHA256."
+      ]
+    },
+    {
+      "id": "deploy",
+      "status": "pass",
+      "observations": [
+        "Archive and 36 contained files verified; activation succeeded; current symlink points to ensemble-3; service and SSH tunnel active."
+      ]
+    },
+    {
+      "id": "public-route",
+      "status": "pass",
+      "observations": [
+        "HTTPS requests succeeded; browser loaded current UI; index returns 200 no-store even for stale conditional headers; model archive 7600262 bytes matches expected SHA256."
+      ]
+    },
+    {
+      "id": "api",
+      "status": "pass",
+      "observations": [
+        "79 HTTP checks and 6 jobs passed: four AOI presets, registered-chip prediction, outside-catalog no_data; idempotent replay/conflict, validation and artifact hashes verified."
+      ]
+    },
+    {
+      "id": "critical-e2e",
+      "status": "pass",
+      "observations": [
+        "BS 938.5212146447 ha with classes 242.9402858694 / 176.4440443851 / 519.1368843902; coverage 25.4%; 1478 downloaded polygons. AF 128 displayed and downloaded hotspots. History/reload/retry passed; zero JS errors."
+      ]
+    },
+    {
+      "id": "rollback",
+      "status": "pass",
+      "observations": [
+        "Rollback served official-tree-v1 and completed AF job_dfbc24b71a7549399e66b3a6924aad2b with 141 hotspots. Restoration to ensemble-3 succeeded and all 6 final jobs passed."
+      ]
+    },
+    {
+      "id": "model-parity",
+      "status": "pass",
+      "observations": [
+        "All four AF/BS masks match reference byte-for-byte; runtime torch2.6 CPU and LightGBM4.6; no synthetic predictions."
+      ]
+    },
+    {
+      "id": "geospatial",
+      "status": "pass",
+      "observations": [
+        "RLE equals downloaded class maps; per-feature and aggregate areas reproducible; class overlap test <=0.001 ha passed; known absence of observations produces null fire metrics and explicit zero coverage. Additional live positive Polygon-with-hole request completed: 938 clipped features, 535.0872964 ha; no geometry enters the excluded hole, independent area recomputation matches API."
+      ]
+    }
+  ],
+  "findings": []
+}

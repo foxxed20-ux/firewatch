@@ -1,0 +1,9 @@
+# Observed inference/test environment: Windows 11, Python 3.13.5.
+# CPU-only PyTorch; not needed by a purely LightGBM bundle.
+--extra-index-url https://download.pytorch.org/whl/cpu
+numpy==2.1.3
+scipy==1.16.3
+rasterio==1.5.1
+lightgbm==4.6.0
+torch==2.6.0+cpu
+pytest==8.4.2

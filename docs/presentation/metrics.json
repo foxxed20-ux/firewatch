@@ -1,0 +1,13 @@
+{
+  "scope": "Валидация на зафиксированном открытом train-разбиении. Не закрытый test",
+  "af_f1": 0.92950869698,
+  "bs_burn_iou": 0.57675420823,
+  "bs_severity_miou": 0.58507853536,
+  "score": 0.7027155774,
+  "bundle": "v2 candidate: AF ensemble 25% CNN / 75% LightGBM; BS tuned LightGBM",
+  "dnbr_burn_iou": 0.3638147045,
+  "dnbr_severity_miou": 0.354266856,
+  "bs_burn_gain": 0.21293950373,
+  "bs_severity_gain": 0.23081167936,
+  "smoke": "CPU offline smoke: 4 сцены, PASS"
+}

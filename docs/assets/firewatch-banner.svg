@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title desc">
+  <title id="title">FireWatch</title>
+  <desc id="desc">Спутниковый мониторинг природных пожаров. Активное горение и оценка последствий.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071c29"/><stop offset="1" stop-color="#133e44"/></linearGradient>
+    <linearGradient id="fire" x2="0" y2="1"><stop stop-color="#ffd483"/><stop offset="1" stop-color="#ff754c"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#a2dbc3" stroke-opacity=".08"/></pattern>
+  </defs>
+  <rect width="1280" height="360" rx="22" fill="url(#bg)"/>
+  <rect width="1280" height="360" rx="22" fill="url(#grid)"/>
+  <g fill="none" stroke="#81c6a7" stroke-opacity=".23" stroke-width="1.5">
+    <path d="M695 25C850 80 779 155 924 130S1048 36 1180 110s-56 138 100 177"/>
+    <path d="M677 60C831 102 795 187 937 160s101-110 229-31-20 132 114 188"/>
+    <path d="M670 100c129-4 128 133 277 92s101-83 204-23 15 142 126 172"/>
+    <path d="M652 156c149-31 120 126 296 67s95-57 199-17 28 113 92 136"/>
+    <path d="M667 214c100-23 172 100 290 43s121-40 186 25"/>
+  </g>
+  <g transform="translate(1000 175)">
+    <circle r="113" fill="none" stroke="#91d1b1" stroke-opacity=".25"/>
+    <circle r="78" fill="none" stroke="#91d1b1" stroke-opacity=".4" stroke-dasharray="4 9"/>
+    <path d="M0-63C-4-23-47-9-39 28c6 34 52 45 73 18 21-27 0-56-8-66 1 22-11 24-11 24C17-27 9-43 0-63Z" fill="url(#fire)"/>
+    <path d="M-126 0h21m210 0h21M0-126v21m0 210v21" stroke="#c3e5d3" stroke-width="2"/>
+    <circle cx="85" cy="-74" r="5" fill="#a8e2bc"/>
+  </g>
+  <rect x="66" y="65" width="5" height="30" rx="2" fill="#ffae72"/>
+  <text x="89" y="86" fill="#a8d6c7" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" letter-spacing="4">EARTH OBSERVATION / FIRE INTELLIGENCE</text>
+  <text x="64" y="179" fill="#f6f5ed" font-family="Arial,Helvetica,sans-serif" font-size="78" font-weight="700" letter-spacing="-2">FireWatch<tspan fill="#ffae72">.</tspan></text>
+  <text x="68" y="226" fill="#d0e2dc" font-family="Arial,Helvetica,sans-serif" font-size="25">От спутникового снимка к карте пожара</text>
+  <text x="68" y="302" fill="#9fc5b8" font-family="Arial,Helvetica,sans-serif" font-size="15" letter-spacing="2">ACTIVE FIRE   /   BURN SEVERITY   /   OPEN API</text>
+</svg>

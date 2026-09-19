@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "scope": "validation-only paired chip bootstrap; no test data; no tuning",
+  "warning": "conditional on selected recipes; does not include model-selection bias; approximate independent event chips",
+  "n_chips": 45,
+  "bootstrap_replicates": 2000,
+  "seed": 42,
+  "resampling": {
+    "unit": "BS validation chip",
+    "draws_per_replicate": 45,
+    "replacement": true,
+    "pairing": "same sampled chip indices for both frozen recipes",
+    "aggregation": "sum sampled chip confusion matrices, then compute global micro score",
+    "interval": "2.5th and 97.5th percentiles of paired score differences"
+  },
+  "cache_contract": {
+    "reference_exactly_equal": true,
+    "valid_exactly_equal": true,
+    "probability_shape": [
+      45,
+      512,
+      512,
+      4
+    ],
+    "xgb_cache_chip_ids_unique": true,
+    "reported_confusions_reproduced": true,
+    "reported_scores_reproduced": true
+  },
+  "recipes": {
+    "baseline_v2_lgb": {
+      "lgb_weight": 1.0,
+      "xgb_weight": 0.0,
+      "class_multipliers": [
+        1.0,
+        3.0,
+        3.0,
+        0.800000011920929
+      ]
+    },
+    "candidate_lgb_xgb": {
+      "lgb_weight": 0.5,
+      "xgb_weight": 0.5,
+      "class_multipliers": [
+        1.0,
+        3.0,
+        3.0,
+        1.0
+      ]
+    }
+  },
+  "observed": {
+    "baseline_v2_lgb": {
+      "confusion_rows_truth_columns_prediction": [
+        [
+          9945702,
+          379674,
+          237018,
+          47802
+        ],
+        [
+          86799,
+          377938,
+          10787,
+          161
+        ],
+        [
+          17180,
+          11993,
+          424496,
+          3832
+        ],
+        [
+          14861,
+          3,
+          15488,
+          222746
+        ]
+      ],
+      "IoU_burn": 0.5767542082302686,
+      "mIoU_severity": 0.5850785353592317,
+      "IoU_1": 0.4357362325691326,
+      "IoU_2": 0.5889283207129915,
+      "IoU_3": 0.7305710527955709,
+      "weighted_bs_score": 0.3773875334883635
+    },
+    "candidate_lgb_xgb": {
+      "confusion_rows_truth_columns_prediction": [
+        [
+          9919512,
+          394186,
+          241804,
+          54694
+        ],
+        [
+          77279,
+          386031,
+          12198,
+          177
+        ],
+        [
+          11532,
+          11280,
+          430150,
+          4539
+        ],
+        [
+          11536,
+          2,
+          14605,
+          226955
+        ]
+      ],
+      "IoU_burn": 0.5785591443221195,
+      "mIoU_severity": 0.5855799928051428,
+      "IoU_1": 0.438097583507064,
+      "IoU_2": 0.5924049865860175,
+      "IoU_3": 0.726237408322347,
+      "weighted_bs_score": 0.37816969835428466
+    },
+    "paired_weighted_bs_score_delta_candidate_minus_baseline": 0.0007821648659211422
+  },
+  "bootstrap": {
+    "paired_delta_mean": 0.0008306690500342557,
+    "paired_delta_median": 0.000771385345655129,
+    "paired_delta_sample_std": 0.0013526146842026653,
+    "percentile_95_interval": [
+      -0.0016604721324841407,
+      0.0035933432837017922
+    ]
+  },
+  "provenance": {
+    "generator": "ops/bootstrap_bs_comparison.py",
+    "inputs": {
+      "lgb_cache_sha256": "1561868431317a3dea32d021a21b79183fa8558db8210f3ea0dca912d8a0cb33",
+      "xgb_cache_sha256": "2426f5f2dca2f69e92b93f5a661135b5a8561cdbc2b24a91a4f890cc6b970045",
+      "comparison_sha256": "ba4cf34ce19e04dba5e333c4620536a5bdb4fce803caf4467b60cdcc620deadf",
+      "v2_recipes_sha256": "1845f3c203f72618b75aa9ec18b84d35f8dda055a3f9fd0587d5ff3f2ae25e2d"
+    }
+  }
+}

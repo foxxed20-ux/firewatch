@@ -1,0 +1,10 @@
+# Observed training environment: Python 3.13.15, Linux, Tesla T4.
+# Install PyTorch from the official CUDA 12.8 wheel index.
+--extra-index-url https://download.pytorch.org/whl/cu128
+numpy==2.1.3
+scipy==1.16.3
+rasterio==1.5.1
+lightgbm==4.6.0
+torch==2.11.0+cu128
+xgboost==3.4.1
+pytest==8.4.2
