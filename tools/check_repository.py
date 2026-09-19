@@ -71,6 +71,8 @@ def local_target_is_tracked(
 def forbidden_reason(relative: PurePosixPath) -> str | None:
     path_text = relative.as_posix()
     top_level = relative.parts[0] if relative.parts else ""
+    if "node_modules" in relative.parts:
+        return "local dependency directory"
     if top_level.startswith((".venv", ".chart-data-")) or top_level in {".codex", "data", "prepared", "runs", "model_bundle"}:
         return "private, local, or generated root"
     if path_text in {"deploy/private", "deploy/tunnel_key"} or path_text.startswith("deploy/private/"):
