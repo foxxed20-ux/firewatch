@@ -591,6 +591,18 @@ def create_app(
         )
     web_dir = Path("web")
     if web_dir.is_dir():
+
+        async def index() -> FileResponse:
+            # The entry point must refresh after deploy/rollback even when an
+            # archive preserves old mtimes. Asset URLs carry content hashes.
+            return FileResponse(
+                web_dir / "index.html",
+                media_type="text/html",
+                headers={"Cache-Control": "no-store"},
+            )
+
+        app.add_api_route("/", index, include_in_schema=False)
+        app.add_api_route("/index.html", index, include_in_schema=False)
         app.mount("/", StaticFiles(directory=web_dir, html=True), name="web")
     return app
 

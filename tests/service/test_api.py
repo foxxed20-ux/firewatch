@@ -524,3 +524,28 @@ def test_accepted_job_persists_private_snapshot_and_model_path(
         == "original"
     )
     assert len(pending) == 1
+
+
+def test_html_entrypoint_refreshes_even_with_stale_conditional_headers(
+    tmp_path: Path,
+) -> None:
+    settings = Settings(
+        tmp_path / "data",
+        tmp_path / "models",
+        tmp_path / "results",
+        tmp_path / "html.sqlite3",
+        None,
+        public_demo=True,
+    )
+    client = TestClient(create_app(settings, catalog_fn=_catalog, models_fn=_models))
+    for route in ("/", "/index.html"):
+        response = client.get(
+            route,
+            headers={
+                "If-Modified-Since": "Wed, 01 Jan 2031 00:00:00 GMT",
+                "If-None-Match": '"stale-release"',
+            },
+        )
+        assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "no-store"
+        assert "FireWatch" in response.text
