@@ -32,6 +32,8 @@ def main(argv=None):
         "train.py",
         "requirements-model.txt",
         "README_MODEL.md",
+        "LICENSE",
+        "NOTICE",
         "docs/MODEL_REPORT.md",
         "artifacts/split.json",
         "artifacts/data_inspection.json",

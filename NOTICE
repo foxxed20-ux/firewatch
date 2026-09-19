@@ -1,0 +1,13 @@
+FireWatch
+Copyright 2026 FireWatch contributors (team 4_th_try).
+
+The original FireWatch source code is licensed under the Apache License,
+Version 2.0. See LICENSE for the full terms.
+
+This project includes Leaflet 1.9.4, copyright Volodymyr Agafonkin and
+CloudMade, under the BSD 2-Clause License. Its original license and notices
+are preserved in web/vendor/LICENSE.
+
+Map attribution: (c) OpenStreetMap contributors. Map tiles and satellite
+datasets retain their own terms. See THIRD_PARTY.md for data provenance,
+third-party notices, and the scope of the project license.
