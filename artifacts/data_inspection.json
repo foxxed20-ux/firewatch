@@ -1,0 +1,244 @@
+{
+  "generated_from": [
+    "artifacts/train_schema.json",
+    "artifacts/train_af_meta.csv",
+    "artifacts/train_bs_meta.csv"
+  ],
+  "scope": {
+    "train_only": true,
+    "test_used": false,
+    "reverse_geocoding_used": false
+  },
+  "data_contract": {
+    "af": {
+      "samples": 420,
+      "gsd_m": 375,
+      "paths": {
+        "viirs": "train/af/viirs",
+        "aux": "train/af/aux",
+        "target": "train/af/masks"
+      },
+      "raster_shape": [
+        256,
+        256
+      ],
+      "inputs": {
+        "viirs": {
+          "bands": [
+            "I1",
+            "I2",
+            "I3",
+            "I4",
+            "I5",
+            "solar_zenith",
+            "sensor_zenith",
+            "valid"
+          ],
+          "dtype": "float32",
+          "nodata": "NaN"
+        },
+        "aux": {
+          "bands": [
+            "landcover",
+            "dem",
+            "t2m",
+            "rh2m",
+            "wind_speed"
+          ],
+          "dtype": "float32",
+          "nodata": null
+        }
+      },
+      "target": {
+        "band": "active_fire",
+        "classes": [
+          0,
+          1
+        ],
+        "dtype": "uint8",
+        "nodata": 255
+      }
+    },
+    "bs": {
+      "samples": 224,
+      "gsd_m": 20,
+      "paths": {
+        "sentinel1_pre": "train/bs/sentinel1_pre",
+        "sentinel1_post": "train/bs/sentinel1_post",
+        "sentinel2_pre": "train/bs/sentinel2_pre",
+        "sentinel2_post": "train/bs/sentinel2_post",
+        "aux": "train/bs/aux",
+        "target": "train/bs/masks"
+      },
+      "raster_shape": [
+        512,
+        512
+      ],
+      "inputs": {
+        "sentinel1_pre_post": {
+          "bands": [
+            "VV",
+            "VH"
+          ],
+          "dtype": "int16",
+          "nodata": null
+        },
+        "sentinel2_pre_post": {
+          "bands": [
+            "B2",
+            "B3",
+            "B4",
+            "B5",
+            "B6",
+            "B7",
+            "B8A",
+            "B11",
+            "B12",
+            "SCL"
+          ],
+          "dtype": "uint16",
+          "nodata": null
+        },
+        "aux": {
+          "bands": [
+            "dem",
+            "slope",
+            "landcover"
+          ],
+          "dtype": "int16",
+          "nodata": null
+        }
+      },
+      "target": {
+        "band": "severity",
+        "classes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "dtype": "uint8",
+        "nodata": 255
+      }
+    },
+    "crs_observed": [
+      "EPSG:32637",
+      "EPSG:32638"
+    ]
+  },
+  "split": {
+    "artifact": "artifacts/split.json",
+    "seed": "firewatch-split-v1",
+    "mapping": "chip_id -> train|val",
+    "selection": "Deterministic group selection at exactly 20%, preserving label prevalence and minimizing year/EPSG distribution error under leakage constraints.",
+    "totals": {
+      "all": 644,
+      "train": 515,
+      "val": 129
+    },
+    "af": {
+      "all": 420,
+      "train": 336,
+      "val": 84,
+      "grouping": "exact (epsg,x_min,y_min,x_max,y_max)",
+      "unique_geogrids": 70,
+      "val_geogrids": 17,
+      "max_geogrid_multiplicity": 31,
+      "geogrid_overlap_count": 0,
+      "label_stratification_only": {
+        "positive_all": 296,
+        "positive_val": 59,
+        "zero_all": 124,
+        "zero_val": 25
+      },
+      "year_all": {
+        "2019": 57,
+        "2020": 84,
+        "2021": 66,
+        "2022": 80,
+        "2023": 55,
+        "2024": 78
+      },
+      "year_val": {
+        "2019": 11,
+        "2020": 17,
+        "2021": 13,
+        "2022": 16,
+        "2023": 11,
+        "2024": 16
+      },
+      "epsg_all": {
+        "32637.0": 306,
+        "32638.0": 114
+      },
+      "epsg_val": {
+        "32637.0": 61,
+        "32638.0": 23
+      }
+    },
+    "bs": {
+      "all": 224,
+      "train": 179,
+      "val": 45,
+      "grouping": "fire_event_id plus exact geogrid",
+      "unique_fire_event_ids": 224,
+      "unique_geogrids": 224,
+      "fire_event_overlap_count": 0,
+      "geogrid_overlap_count": 0,
+      "stratification_only": [
+        "date_pre year",
+        "EPSG",
+        "burn_area_ha quartile"
+      ],
+      "year_all": {
+        "2019": 11,
+        "2020": 71,
+        "2021": 11,
+        "2022": 31,
+        "2023": 18,
+        "2024": 82
+      },
+      "year_val": {
+        "2019": 2,
+        "2020": 15,
+        "2021": 1,
+        "2022": 6,
+        "2023": 4,
+        "2024": 17
+      },
+      "epsg_all": {
+        "32637.0": 109,
+        "32638.0": 115
+      },
+      "epsg_val": {
+        "32637.0": 21,
+        "32638.0": 24
+      }
+    }
+  },
+  "leakage_findings": {
+    "af": {
+      "fire_event_id_available": false,
+      "exact_geogrids_repeated": 58,
+      "acquisition_plus_geogrid_connected_components": 1,
+      "decision": "Exact geogrid isolation has priority. Linking every shared acquisition timestamp as well would place all 420 AF samples in one component, so acquisition dates necessarily occur in both splits."
+    },
+    "bs": {
+      "fire_event_ids_repeated": 0,
+      "exact_geogrids_repeated": 0,
+      "decision": "Both identifiers are isolated; in supplied metadata every event and exact geogrid is unique."
+    }
+  },
+  "training_guards": [
+    "Treat target mask value 255 as ignore/nodata in loss and metrics.",
+    "Use n_fire_px, burn_area_ha and severity pixel counts only for split diagnostics/stratification; never pass them to the model as features.",
+    "Use the AF VIIRS valid band and finite-value masking before normalization.",
+    "Treat Sentinel-2 SCL and landcover bands as categorical; do not normalize them as reflectance/elevation.",
+    "Fit all normalization statistics on the train partition only."
+  ],
+  "limits": [
+    "No organizer baseline or scorer was present in the supplied local schema/metadata artifacts; this does not prove absence elsewhere in the archive.",
+    "The metadata shows repeated fixed AF grids and standardized chip sizes, consistent with systematic chip construction; it is not evidence that imagery or labels are synthetic.",
+    "Split integrity was checked from metadata identities and bounds, not from pixel-level image hashing."
+  ]
+}

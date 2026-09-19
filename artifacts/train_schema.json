@@ -1,0 +1,426 @@
+{
+  "train/bs/sentinel1_pre": {
+    "count": 224,
+    "file": "BS_tr_000045_Sentinel-1_pre.tif",
+    "shape": [
+      2,
+      512,
+      512
+    ],
+    "dtype": "int16",
+    "nodata": null,
+    "crs": "EPSG:32637",
+    "transform": [
+      20.0,
+      0.0,
+      655360.0,
+      0.0,
+      -20.0,
+      5488640.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "VV",
+      "VH"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      -2494,
+      -3537
+    ],
+    "max": [
+      -67,
+      -980
+    ]
+  },
+  "train/bs/sentinel2_pre": {
+    "count": 224,
+    "file": "BS_tr_000019_Sentinel-2_pre.tif",
+    "shape": [
+      10,
+      512,
+      512
+    ],
+    "dtype": "uint16",
+    "nodata": null,
+    "crs": "EPSG:32638",
+    "transform": [
+      20.0,
+      0.0,
+      307200.0,
+      0.0,
+      -20.0,
+      5171200.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8A",
+      "B11",
+      "B12",
+      "SCL"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      1,
+      16,
+      22,
+      1,
+      1,
+      1,
+      1,
+      63,
+      70,
+      2
+    ],
+    "max": [
+      4212,
+      4393,
+      4598,
+      4655,
+      4523,
+      5621,
+      5675,
+      7543,
+      9052,
+      9
+    ]
+  },
+  "train/bs/sentinel1_post": {
+    "count": 224,
+    "file": "BS_tr_000181_Sentinel-1_post.tif",
+    "shape": [
+      2,
+      512,
+      512
+    ],
+    "dtype": "int16",
+    "nodata": null,
+    "crs": "EPSG:32637",
+    "transform": [
+      20.0,
+      0.0,
+      491520.0,
+      0.0,
+      -20.0,
+      5294080.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "VV",
+      "VH"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      -4227,
+      -4873
+    ],
+    "max": [
+      1312,
+      178
+    ]
+  },
+  "train/bs/aux": {
+    "count": 224,
+    "file": "BS_tr_000018_AUX.tif",
+    "shape": [
+      3,
+      512,
+      512
+    ],
+    "dtype": "int16",
+    "nodata": null,
+    "crs": "EPSG:32638",
+    "transform": [
+      20.0,
+      0.0,
+      645120.0,
+      0.0,
+      -20.0,
+      5355520.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "dem",
+      "slope",
+      "landcover"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      -13,
+      0,
+      10
+    ],
+    "max": [
+      12,
+      1,
+      90
+    ]
+  },
+  "train/bs/sentinel2_post": {
+    "count": 224,
+    "file": "BS_tr_000117_Sentinel-2_post.tif",
+    "shape": [
+      10,
+      512,
+      512
+    ],
+    "dtype": "uint16",
+    "nodata": null,
+    "crs": "EPSG:32638",
+    "transform": [
+      20.0,
+      0.0,
+      655360.0,
+      0.0,
+      -20.0,
+      5427200.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8A",
+      "B11",
+      "B12",
+      "SCL"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      210,
+      151,
+      148,
+      144,
+      129,
+      162,
+      145,
+      219,
+      214,
+      3
+    ],
+    "max": [
+      4130,
+      4169,
+      4270,
+      4485,
+      4452,
+      4463,
+      4612,
+      5579,
+      4973,
+      10
+    ]
+  },
+  "train/bs/masks": {
+    "count": 224,
+    "file": "BS_tr_000187_MASK.tif",
+    "shape": [
+      1,
+      512,
+      512
+    ],
+    "dtype": "uint8",
+    "nodata": 255.0,
+    "crs": "EPSG:32637",
+    "transform": [
+      20.0,
+      0.0,
+      706560.0,
+      0.0,
+      -20.0,
+      5171200.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "severity"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      0
+    ],
+    "max": [
+      3
+    ],
+    "unique": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "train/af/viirs": {
+    "count": 420,
+    "file": "AF_tr_000026_VIIRS_I1-I5.tif",
+    "shape": [
+      8,
+      256,
+      256
+    ],
+    "dtype": "float32",
+    "nodata": NaN,
+    "crs": "EPSG:32637",
+    "transform": [
+      375.0,
+      0.0,
+      384000.0,
+      0.0,
+      -375.0,
+      5376000.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "solar_zenith",
+      "sensor_zenith",
+      "valid"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      0.04528133198618889,
+      0.027788542211055756,
+      0.008116653189063072,
+      291.5579528808594,
+      267.87347412109375,
+      43.73999786376953,
+      56.86000061035156,
+      1.0
+    ],
+    "max": [
+      0.21071311831474304,
+      0.3884798288345337,
+      0.34691697359085083,
+      338.27020263671875,
+      306.97119140625,
+      44.96999740600586,
+      59.98999786376953,
+      1.0
+    ]
+  },
+  "train/af/aux": {
+    "count": 420,
+    "file": "AF_tr_000116_AUX.tif",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "dtype": "float32",
+    "nodata": null,
+    "crs": "EPSG:32637",
+    "transform": [
+      375.0,
+      0.0,
+      384000.0,
+      0.0,
+      -375.0,
+      5280000.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "landcover",
+      "dem",
+      "t2m",
+      "rh2m",
+      "wind_speed"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      10.0,
+      -13.274320602416992,
+      287.1137390136719,
+      57.882320404052734,
+      2.678460121154785
+    ],
+    "max": [
+      90.0,
+      278.3257141113281,
+      291.8871765136719,
+      76.39205932617188,
+      7.109720706939697
+    ]
+  },
+  "train/af/masks": {
+    "count": 420,
+    "file": "AF_tr_000188_MASK.tif",
+    "shape": [
+      1,
+      256,
+      256
+    ],
+    "dtype": "uint8",
+    "nodata": 255.0,
+    "crs": "EPSG:32637",
+    "transform": [
+      375.0,
+      0.0,
+      576000.0,
+      0.0,
+      -375.0,
+      5088000.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "descriptions": [
+      "active_fire"
+    ],
+    "tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "min": [
+      0
+    ],
+    "max": [
+      1
+    ],
+    "unique": [
+      0,
+      1
+    ]
+  }
+}
