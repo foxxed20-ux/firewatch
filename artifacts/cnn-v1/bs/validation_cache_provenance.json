@@ -1,0 +1,10 @@
+{
+  "scope": "validation_only; no thresholding, tuning, or test data",
+  "task": "bs",
+  "count": 45,
+  "device": "cuda",
+  "precision": "float32",
+  "checkpoint_sha256": "b53f0a9f7b660cdaa3c6a4789d221af583f34b766568a611f191241b2e547bc4",
+  "config_sha256": "5d28b92336913e9e5f6e56b36287a2c03a7b517ea981095eea657a916fd5716f",
+  "seconds": 34.626157048000096
+}

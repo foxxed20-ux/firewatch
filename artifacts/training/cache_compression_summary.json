@@ -1,0 +1,11 @@
+{
+  "apply": true,
+  "task": "bs",
+  "split": "train",
+  "compression_level": 1,
+  "processed": 178,
+  "skipped": 1,
+  "old_bytes": 10298693929,
+  "new_bytes": 6054812212,
+  "bitwise_verified": 178
+}

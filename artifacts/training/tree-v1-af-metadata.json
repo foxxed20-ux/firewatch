@@ -1,0 +1,77 @@
+{
+  "format_version": 1,
+  "task": "af",
+  "channels": 23,
+  "feature_names": [
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "solar_zenith",
+    "sensor_zenith",
+    "valid",
+    "landcover",
+    "dem",
+    "t2m",
+    "rh2m",
+    "wind_speed",
+    "I4_minus_I5",
+    "I4_minus_t2m",
+    "I5_minus_t2m",
+    "reflectance_nd21",
+    "reflectance_nd32",
+    "thermal_mean_3",
+    "thermal_contrast_3",
+    "thermal_mean_11",
+    "thermal_contrast_11",
+    "I4_contrast_11"
+  ],
+  "threshold": 0.7955632209777832,
+  "class_multipliers": [
+    1.0
+  ],
+  "best_iteration": 24,
+  "selection_score": 0.902135231316726,
+  "full_validation": {
+    "F1_af": 0.902135231316726,
+    "threshold": 0.7955632209777832
+  },
+  "sample": {
+    "sampled_pixels": 407955,
+    "population_counts": [
+      22011981,
+      8115
+    ],
+    "sampled_counts": [
+      399840,
+      8115
+    ],
+    "per_chip_per_class_cap": 1190,
+    "prior_weights": [
+      55.051973289315725,
+      1.0
+    ]
+  },
+  "train_records": 336,
+  "val_records": 84,
+  "seed": 42,
+  "num_threads": 2,
+  "parameters": {
+    "objective": "binary",
+    "metric": "binary_logloss",
+    "learning_rate": 0.06,
+    "num_leaves": 63,
+    "max_depth": -1,
+    "min_data_in_leaf": 80,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
+    "bagging_freq": 1,
+    "lambda_l2": 1.0,
+    "verbosity": -1,
+    "seed": 42,
+    "feature_fraction_seed": 42,
+    "bagging_seed": 42,
+    "num_threads": 2
+  }
+}

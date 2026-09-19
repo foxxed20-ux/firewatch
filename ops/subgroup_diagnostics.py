@@ -1,4 +1,4 @@
-"""Post-hoc micro diagnostics for the frozen V2 validation predictions.
+"""Post-hoc micro diagnostics for frozen validation predictions.
 
 This tool never tunes thresholds or class weights. Cache order follows
 competition.evaluate: load_records preserves manifest order, main filters that
@@ -83,7 +83,9 @@ def _confusion(truth: np.ndarray, prediction: np.ndarray) -> np.ndarray:
     if not np.isin(truth, (0, 1, 2, 3)).all():
         raise ValueError(f"BS truth has unexpected labels: {np.unique(truth)}")
     if not np.isin(prediction, (0, 1, 2, 3)).all():
-        raise ValueError(f"BS prediction has unexpected labels: {np.unique(prediction)}")
+        raise ValueError(
+            f"BS prediction has unexpected labels: {np.unique(prediction)}"
+        )
     return np.bincount(
         truth.astype(np.int64) * 4 + prediction.astype(np.int64), minlength=16
     ).reshape(4, 4)
@@ -189,11 +191,40 @@ def _cache(path: Path, expected_n: int, task: str) -> dict[str, np.ndarray]:
     return payload
 
 
+def _bs_cnn_cache(path: Path, rows: list[dict[str, Any]]) -> dict[str, np.ndarray]:
+    with np.load(path, allow_pickle=False) as archive:
+        payload = {key: np.asarray(archive[key]) for key in archive.files}
+    required = {"reference", "valid", "cnn_probability"}
+    if not required.issubset(payload):
+        raise ValueError(f"{path}: missing keys {sorted(required - payload.keys())}")
+    expected_n = len(rows)
+    if (
+        payload["reference"].shape != (expected_n, 512, 512)
+        or payload["valid"].shape != payload["reference"].shape
+    ):
+        raise ValueError(f"{path}: unexpected BS reference/valid shapes")
+    if payload["cnn_probability"].shape != (*payload["reference"].shape, 4):
+        raise ValueError(f"{path}: unexpected BS cnn_probability shape")
+    if (
+        payload["valid"].dtype != np.bool_
+        or not np.isfinite(payload["cnn_probability"]).all()
+    ):
+        raise ValueError(f"{path}: invalid valid/CNN probability values")
+    if not np.isin(payload["reference"][payload["valid"]], (0, 1, 2, 3)).all():
+        raise ValueError(f"{path}: unexpected BS reference labels")
+    if "chip_ids" in payload:
+        expected_ids = np.asarray([str(row["id"]) for row in rows])
+        if not np.array_equal(payload["chip_ids"].astype(str), expected_ids):
+            raise ValueError(f"{path}: chip_ids do not match stable records order")
+    return payload
+
+
 def build_report(args: argparse.Namespace) -> dict[str, Any]:
     records_path = Path(args.records)
     recipes_path = Path(args.recipes)
     af_cache_path = Path(args.af_cache)
     bs_cache_path = Path(args.bs_cache)
+    bs_cnn_cache_path = Path(args.bs_cnn_cache) if args.bs_cnn_cache else None
     af_rows = _records(records_path, "af")
     bs_rows = _records(records_path, "bs")
     af_meta = _metadata(Path(args.af_meta))
@@ -215,44 +246,72 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"unexpected AF tree_probability shape {tree_af.shape}")
     if af["cnn_probability"].shape != af["reference"].shape:
         raise ValueError("unexpected AF cnn_probability shape")
-    af_probability = (
-        cnn_weight * af["cnn_probability"] + tree_weight * tree_af[..., 0]
-    )
+    af_probability = cnn_weight * af["cnn_probability"] + tree_weight * tree_af[..., 0]
     af_prediction = (af_probability >= af_threshold).astype(np.uint8)
 
     bs_recipe = recipes["bs"]
-    if bs_recipe.get("backend") != "tree":
-        raise ValueError(f"unexpected BS V2 recipe: {bs_recipe}")
+    bs_backend = bs_recipe.get("backend")
     weights = np.asarray(bs_recipe["class_multipliers"], dtype=np.float32)
     if weights.shape != (4,) or bs["tree_probability"].shape != (
         *bs["reference"].shape,
         4,
     ):
         raise ValueError("unexpected BS probability/weight shape")
-    bs_prediction = (bs["tree_probability"] * weights).argmax(-1).astype(np.uint8)
+    bs_cnn_weight = 0.0
+    if bs_backend == "tree":
+        bs_probability = bs["tree_probability"]
+    elif bs_backend == "ensemble":
+        selected = str(bs_recipe["selected"])
+        match = re.fullmatch(r"ensemble_cnn_(0(?:\.\d+)?|1(?:\.0+)?)", selected)
+        if not match or bs_cnn_cache_path is None:
+            raise ValueError(
+                "BS ensemble requires --bs-cnn-cache and ensemble_cnn_* recipe"
+            )
+        bs_cnn = _bs_cnn_cache(bs_cnn_cache_path, bs_rows)
+        if not np.array_equal(
+            bs["reference"], bs_cnn["reference"]
+        ) or not np.array_equal(bs["valid"], bs_cnn["valid"]):
+            raise ValueError(
+                "BS tree/CNN reference and valid caches must match exactly"
+            )
+        bs_cnn_weight = float(match.group(1))
+        bs_probability = (
+            bs_cnn_weight * bs_cnn["cnn_probability"]
+            + (1.0 - bs_cnn_weight) * bs["tree_probability"]
+        ).astype(np.float32)
+    else:
+        raise ValueError(f"unexpected BS recipe backend: {bs_recipe}")
+    bs_prediction = (bs_probability * weights).argmax(-1).astype(np.uint8)
 
     af_all = list(range(len(af_rows)))
     bs_all = list(range(len(bs_rows)))
     af_global = _af_group(af_all, af["reference"], af_prediction, af["valid"])
     bs_global = _bs_group(bs_all, bs["reference"], bs_prediction, bs["valid"])
-    if not np.isclose(
-        af_global["f1"], float(af_recipe["F1_af"]), rtol=0.0, atol=1e-15
-    ):
+    if not np.isclose(af_global["f1"], float(af_recipe["F1_af"]), rtol=0.0, atol=1e-15):
         raise ValueError("AF cache reconstruction does not reproduce selected recipe")
     for output_key, recipe_key in (
         ("iou", "IoU_burn"),
         ("miou_severity", "mIoU_sev"),
     ):
-        actual = bs_global["burn"][output_key] if output_key == "iou" else bs_global[output_key]
+        actual = (
+            bs_global["burn"][output_key]
+            if output_key == "iou"
+            else bs_global[output_key]
+        )
         if not np.isclose(actual, float(bs_recipe[recipe_key]), rtol=0.0, atol=1e-15):
-            raise ValueError(
-                f"BS cache reconstruction does not reproduce {recipe_key}"
-            )
-    expected_confusion = recipes.get("_postprocess_tuning", {}).get("final", {}).get(
-        "confusion"
+            raise ValueError(f"BS cache reconstruction does not reproduce {recipe_key}")
+    expected_confusion = (
+        recipes.get("_postprocess_tuning", {}).get("final", {}).get("confusion")
     )
-    if expected_confusion != bs_global["confusion_rows_truth_columns_prediction"]:
-        raise ValueError("BS cache reconstruction does not reproduce final confusion")
+    confusion_check = None
+    if expected_confusion is not None:
+        confusion_check = (
+            expected_confusion == bs_global["confusion_rows_truth_columns_prediction"]
+        )
+        if not confusion_check:
+            raise ValueError(
+                "BS cache reconstruction does not reproduce final confusion"
+            )
 
     af_years = _group_indices(
         af_rows,
@@ -294,7 +353,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "bs_records": len(bs_rows),
             "bs_cache_axis0": int(bs["reference"].shape[0]),
             "selected_recipe_metrics_reproduced": True,
-            "bs_final_confusion_reproduced": True,
+            "bs_final_confusion_reproduced": confusion_check,
         },
         "provenance": {
             "generator": "ops/subgroup_diagnostics.py",
@@ -315,6 +374,16 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
                     "path": bs_cache_path.as_posix(),
                     "sha256": _sha256(bs_cache_path),
                 },
+                **(
+                    {
+                        "bs_cnn_cache": {
+                            "path": bs_cnn_cache_path.as_posix(),
+                            "sha256": _sha256(bs_cnn_cache_path),
+                        }
+                    }
+                    if bs_cnn_cache_path
+                    else {}
+                ),
             },
         },
         "recipe": {
@@ -323,23 +392,24 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
                 "tree_weight": tree_weight,
                 "threshold": af_threshold,
             },
-            "bs": {"class_multipliers": weights.astype(float).tolist()},
+            "bs": {
+                "backend": bs_backend,
+                "cnn_weight": bs_cnn_weight,
+                "tree_weight": 1.0 - bs_cnn_weight,
+                "class_multipliers": weights.astype(float).tolist(),
+            },
         },
         "af": {
             "global": af_global,
             "by_acquisition_year": {
-                name: _af_group(
-                    indices, af["reference"], af_prediction, af["valid"]
-                )
+                name: _af_group(indices, af["reference"], af_prediction, af["valid"])
                 for name, indices in af_years.items()
             },
         },
         "bs": {
             "global": bs_global,
             "by_pre_acquisition_year": {
-                name: _bs_group(
-                    indices, bs["reference"], bs_prediction, bs["valid"]
-                )
+                name: _bs_group(indices, bs["reference"], bs_prediction, bs["valid"])
                 for name, indices in bs_years.items()
             },
             "by_cloud_fraction": {
@@ -362,7 +432,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Post-hoc V2 validation subgroup diagnostics without tuning"
+        description="Post-hoc validation subgroup diagnostics without tuning"
     )
     parser.add_argument("--records", default="artifacts/prepared_records.json")
     parser.add_argument(
@@ -373,6 +443,7 @@ def main(argv: list[str] | None = None) -> int:
         "--bs-cache",
         default="artifacts/tree-v1/bs_validation_probabilities.npz",
     )
+    parser.add_argument("--bs-cnn-cache")
     parser.add_argument("--af-meta", default="artifacts/train_af_meta.csv")
     parser.add_argument("--bs-meta", default="artifacts/train_bs_meta.csv")
     parser.add_argument(

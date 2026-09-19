@@ -1,0 +1,151 @@
+{
+  "bundle_id": "official-ensemble-v3",
+  "device": "cpu",
+  "network_connections_blocked": true,
+  "masks": [
+    {
+      "chip_id": "AF_tr_000126",
+      "shape": [
+        256,
+        256
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "d1199018fc75783ce75fc6db419f4d5691a0e35bf09015cbf9d41a81486c5bdc",
+      "counts": {
+        "0": 65408,
+        "1": 128
+      },
+      "seconds": 3.3211170999566093,
+      "provenance": {
+        "bundle_id": "official-ensemble-v3",
+        "task": "af",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "2b14edc51ee01937bc6b3931fbb6ba3a42a0fef683c036cdfcbbebf988deaf4e"
+          },
+          "tree": {
+            "metadata.json": "4908a5f88e14ae53d883074efd1e8681ad17d7ea8b0e7899514ff8f1d9fbe2a0",
+            "model.txt": "b419568136813964e43e06078661fb009e20341373b9fa7a771f9a6b4914efc2"
+          }
+        }
+      }
+    },
+    {
+      "chip_id": "AF_tr_000165",
+      "shape": [
+        256,
+        256
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "6458ec30899198a30cd30306ae27e13752f2d500bca2c39a9b09490970e2fdfa",
+      "counts": {
+        "0": 65424,
+        "1": 112
+      },
+      "seconds": 0.24948139995103702,
+      "provenance": {
+        "bundle_id": "official-ensemble-v3",
+        "task": "af",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "2b14edc51ee01937bc6b3931fbb6ba3a42a0fef683c036cdfcbbebf988deaf4e"
+          },
+          "tree": {
+            "metadata.json": "4908a5f88e14ae53d883074efd1e8681ad17d7ea8b0e7899514ff8f1d9fbe2a0",
+            "model.txt": "b419568136813964e43e06078661fb009e20341373b9fa7a771f9a6b4914efc2"
+          }
+        }
+      }
+    },
+    {
+      "chip_id": "BS_tr_000135",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "2e231fbbcc4b897994daafa653fd0071c9eeee8c9b888c5e76bb1e43ba0faf4f",
+      "counts": {
+        "0": 212878,
+        "1": 9737,
+        "2": 27996,
+        "3": 11533
+      },
+      "seconds": 3.629797999979928,
+      "provenance": {
+        "bundle_id": "official-ensemble-v3",
+        "task": "bs",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "a38994591b1e4c1ce90639f856338575428215bbbf24e9f632674f609b66adc0"
+          },
+          "tree": {
+            "metadata.json": "9b02e6fb7b5e1c6ed391570c138b29ae42010af85fd4e996426d0a1a7fc0b499",
+            "model.txt": "13dcf6f140c5f1aa8d70ed6e740342077e1ab6c12cc28c70521da4c0905b7fc4"
+          }
+        }
+      }
+    },
+    {
+      "chip_id": "BS_tr_000159",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "6e19a64b51cf772d68d7c000b0ace8a725c65a309d2a8d11cf880b951f841c3e",
+      "counts": {
+        "0": 201563,
+        "1": 14122,
+        "2": 23376,
+        "3": 23083
+      },
+      "seconds": 3.73496819997672,
+      "provenance": {
+        "bundle_id": "official-ensemble-v3",
+        "task": "bs",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "a38994591b1e4c1ce90639f856338575428215bbbf24e9f632674f609b66adc0"
+          },
+          "tree": {
+            "metadata.json": "9b02e6fb7b5e1c6ed391570c138b29ae42010af85fd4e996426d0a1a7fc0b499",
+            "model.txt": "13dcf6f140c5f1aa8d70ed6e740342077e1ab6c12cc28c70521da4c0905b7fc4"
+          }
+        }
+      }
+    }
+  ]
+}

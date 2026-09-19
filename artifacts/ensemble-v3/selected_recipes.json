@@ -1,0 +1,28 @@
+{
+  "af": {
+    "task": "af",
+    "selected": "ensemble_cnn_0.25",
+    "backend": "ensemble",
+    "selection_score": 0.9295086969789441,
+    "F1_af": 0.9295086969789441,
+    "threshold": 0.7525456547737122
+  },
+  "bs": {
+    "task": "bs",
+    "selected": "ensemble_cnn_0.25",
+    "backend": "ensemble",
+    "selection_score": 0.38184949737834106,
+    "IoU_burn": 0.586688701444679,
+    "mIoU_sev": 0.5883615062423446,
+    "IoU_1": 0.4535083553028582,
+    "IoU_2": 0.5917899280773978,
+    "IoU_3": 0.7197862353467778,
+    "class_multipliers": [
+      1.0,
+      2.200000047683716,
+      2.200000047683716,
+      1.2999999523162842
+    ]
+  },
+  "_warning": "validation only; both CNN/LightGBM weights and postprocessing selected on the same validation split; not a private test score"
+}

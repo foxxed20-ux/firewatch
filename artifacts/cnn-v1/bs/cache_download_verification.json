@@ -1,0 +1,15 @@
+{
+  "cache_sha256": "2bebddee669a740b25f14f54fc899468ec743fafaf80bc95a757f92e7d6ed452",
+  "training_archive_sha256": "f8f15832b59b5ecdff58a46d6f78c791139a08f1dee8e3066a5a489f739071e4",
+  "prepared_records_sha256": "d16e4fbffb4a4645ac18e82ac965bac84ac00bf7da7f72ea3a500193e3c1f86f",
+  "chip_order_exact": true,
+  "validation_chips": 45,
+  "probability_shape": [
+    45,
+    512,
+    512,
+    4
+  ],
+  "archive_crc_verified": true,
+  "scope": "Downloaded completed BS CNN validation cache; order checked against frozen prepared records. No chip IDs or arrays in this receipt."
+}

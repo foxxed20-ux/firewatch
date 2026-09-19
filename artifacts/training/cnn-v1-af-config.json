@@ -1,0 +1,44 @@
+{
+  "task": "af",
+  "channels": 23,
+  "feature_names": [
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "solar_zenith",
+    "sensor_zenith",
+    "valid",
+    "landcover",
+    "dem",
+    "t2m",
+    "rh2m",
+    "wind_speed",
+    "I4_minus_I5",
+    "I4_minus_t2m",
+    "I5_minus_t2m",
+    "reflectance_nd21",
+    "reflectance_nd32",
+    "thermal_mean_3",
+    "thermal_contrast_3",
+    "thermal_mean_11",
+    "thermal_contrast_11",
+    "I4_contrast_11"
+  ],
+  "base_channels": 24,
+  "seed": 42,
+  "epochs": 80,
+  "batch_size": 8,
+  "learning_rate": 0.0003,
+  "crop_size": 256,
+  "time_limit_min": 14.0,
+  "workers": 1,
+  "records": 420,
+  "class_balance": {
+    "pos_weight": 30.0,
+    "class_weights": [
+      1.0
+    ]
+  }
+}

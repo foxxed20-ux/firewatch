@@ -1,0 +1,107 @@
+{
+  "checked_at_utc": "2026-09-19T13:46:50.5921901Z",
+  "scope": "Read-only browser acceptance of public V3; no web/backend changes",
+  "url": "https://firewatch.151.247.25.189.nip.io/",
+  "deployment": "20260919-ensemble-4",
+  "model_bundle_id": "official-ensemble-v3",
+  "method": "Actual CUA browser interactions: fresh BS159 and AF126 submissions, displayed results and contours, clicked GeoJSON exports and JSON report, inspected actual downloaded files, reload and history restore. Read-only API result and public asset SHA cross-check.",
+  "status": "pass",
+  "bs": {
+    "severity_area_ha": {
+      "1": 250.58251939483546,
+      "2": 178.84489737305495,
+      "3": 607.8805915566091
+    },
+    "preset": "BS_tr_000159",
+    "coverage_fraction": 0.2539423435774148,
+    "downloaded_features": 1171,
+    "ui_values": [
+      "1 037,3",
+      "250,6",
+      "178,8",
+      "607,9",
+      "25,4%"
+    ],
+    "area_ha": 1037.3080083244995,
+    "classes": [
+      1,
+      2,
+      3
+    ],
+    "job_id": "job_4b1890ecd2fc4f9384633a2a658f0aa6",
+    "all_feature_models": "official-ensemble-v3",
+    "report_bundle": "official-ensemble-v3",
+    "data_status": "partial"
+  },
+  "af": {
+    "all_feature_models": "official-ensemble-v3",
+    "data_status": "partial",
+    "hotspot_count": 128,
+    "downloaded_features": 128,
+    "preset": "AF_tr_000126",
+    "ui_values": [
+      "128",
+      "91,7%"
+    ],
+    "job_id": "job_7fd218958d424943962e48d66c47a366",
+    "coverage_fraction": 0.9170120980982279
+  },
+  "history_reload": "Passed: reopened BS159 created16:43:27MSK;UI1037.3ha,modelv3,exactV3jobGeoJSONhref",
+  "console_errors": [],
+  "asset_comparison": "4of4 publicfirstpartySHA256matchlocal;root200no-store",
+  "screenshot": {
+    "height": 900,
+    "caption": "PublicV3,BS_tr_000159,13–28July2024;1037.3haobservedburnarea;25.4%coverage;train/validationdemonstration,nottestscore",
+    "path": "artifacts/frontend/v3-bs-desktop.png",
+    "width": 1440
+  },
+  "artifacts": [
+    {
+      "sha256": "37d40dad2826154fc546db840f129a94fef909f021e59f5f7cc1f0bc5034b156",
+      "bytes": 220,
+      "path": "artifacts/frontend/v3-model-registry.json"
+    },
+    {
+      "sha256": "14cdfeffe1aa18b067eefbea34a78c40ee557a915a4395c13d33830fee787ab6",
+      "bytes": 1051,
+      "path": "artifacts/frontend/v3-public-assets.json"
+    },
+    {
+      "sha256": "214ec4a3fc5318f5b2f55fda712f8413d37ad26a034ba2aeac80a8c195d53c73",
+      "bytes": 4702,
+      "path": "artifacts/frontend/v3-bs-result.json"
+    },
+    {
+      "sha256": "842fd877d2e2200430bcb00b7643e92e24afc2a55ea5a324fa1664d19c685883",
+      "bytes": 4443,
+      "path": "artifacts/frontend/v3-af-result.json"
+    },
+    {
+      "sha256": "77535a79d72d74b0f22293d7f85a89e188b663cff030afa52409a9a4a646553a",
+      "bytes": 1580848,
+      "path": "artifacts/frontend/v3-bs-download.geojson"
+    },
+    {
+      "sha256": "7f95fd35437335e4e5a0cdf4222b9050a6d05339739ceffb9aa79c7183b99f28",
+      "bytes": 53307,
+      "path": "artifacts/frontend/v3-af-download.geojson"
+    },
+    {
+      "sha256": "5795e7cf096ca1e3d6e516d4a24a22136f0ea671ba43613ce28a56a9710bd230",
+      "bytes": 5334,
+      "path": "artifacts/frontend/v3-bs-report.json"
+    },
+    {
+      "sha256": "8548d5dbeb79ab88667666f0dce808b30826a06e8a568eabdaea2c640c51d4cb",
+      "bytes": 311217,
+      "path": "artifacts/frontend/v3-bs-desktop.png"
+    }
+  ],
+  "unverified": [],
+  "remaining_frontend_gates": [],
+  "notes": [
+    "Data from existing public train/validation demo;not independent test evaluation",
+    "Public model activation and rollout operated by service owner;no backend switches by UI agent",
+    "V2 artifacts retained;only v3-* artifacts added"
+  ]
+}

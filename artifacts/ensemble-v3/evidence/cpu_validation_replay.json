@@ -1,0 +1,43 @@
+{
+  "bundle_id": "official-ensemble-v3",
+  "device": "cpu",
+  "network_blocked": true,
+  "scope": "Saved-weight runtime replay; not retraining or independent test",
+  "metrics": {
+    "F1_af": 0.9295086969789441,
+    "IoU_burn": 0.586688701444679,
+    "IoU_sev": {
+      "1": 0.4535083553028582,
+      "2": 0.5917899280773978,
+      "3": 0.7197862353467778
+    },
+    "mIoU_sev": 0.5883615062423446,
+    "Score": 0.7071775413209714
+  },
+  "expected_validation": {
+    "F1_af": 0.9295086969789441,
+    "IoU_burn": 0.586688701444679,
+    "mIoU_sev": 0.5883615062423446
+  },
+  "absolute_delta": {
+    "F1_af": 0.0,
+    "IoU_burn": 0.0,
+    "mIoU_sev": 0.0
+  },
+  "tolerance": 0.005,
+  "within_tolerance": true,
+  "class_map_digests": {
+    "af": "b9e92c1b6a030889c5c026ba83f4c26df42d69b32851eb8674299603f6353383",
+    "bs": "ea394c2791dd0867b342cdfdb5eee0eddd59d44019ad7fc6fe87a8f3d5c20d32"
+  },
+  "timing": {
+    "af": {
+      "chips": 84,
+      "seconds": 74.12839728499966
+    },
+    "bs": {
+      "chips": 45,
+      "seconds": 308.94909319900034
+    }
+  }
+}

@@ -1,7 +1,8 @@
-"""Paired chip bootstrap for the frozen V2 LGB and LGB/XGB BS recipes.
+"""Paired chip bootstrap for frozen V2 LGB and LGB/secondary BS recipes.
 
-Only validation caches are accepted. Recipes are read from their existing
-selection reports and are never tuned by this diagnostic.
+Only validation caches are accepted. The V2 baseline comes from its selection
+report; the frozen secondary weight and multipliers come from CLI arguments.
+This diagnostic never tunes either recipe.
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ def _sha256(path: Path) -> str:
 
 def _load_cache(
     path: Path, probability_key: str
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, bool | None]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray | None]:
     with np.load(path, allow_pickle=False) as archive:
         required = {"reference", "valid", probability_key}
         missing = required - set(archive.files)
@@ -41,14 +42,15 @@ def _load_cache(
         reference = np.asarray(archive["reference"])
         valid = np.asarray(archive["valid"])
         probability = np.asarray(archive[probability_key])
-        ids_unique = None
+        chip_ids = None
         if "chip_ids" in archive.files:
             chip_ids = np.asarray(archive["chip_ids"])
             if chip_ids.shape != (reference.shape[0],):
                 raise ValueError(f"{path}/chip_ids has an incompatible shape")
-            ids_unique = len(set(chip_ids.astype(str).tolist())) == len(chip_ids)
-    if reference.shape != (45, 512, 512):
-        raise ValueError(f"{path}/reference must have shape (45,512,512)")
+            if len(set(chip_ids.astype(str).tolist())) != len(chip_ids):
+                raise ValueError(f"{path}/chip_ids are not unique")
+    if reference.ndim != 3 or reference.shape[0] == 0:
+        raise ValueError(f"{path}/reference must be a non-empty [N,H,W] array")
     if valid.shape != reference.shape or valid.dtype != np.bool_:
         raise ValueError(f"{path}/valid must be a matching bool array")
     if probability.shape != (*reference.shape, 4):
@@ -59,7 +61,7 @@ def _load_cache(
         raise ValueError(f"{path}/reference must be integer")
     if not np.isin(reference[valid], (0, 1, 2, 3)).all():
         raise ValueError(f"{path}/reference has invalid scored labels")
-    return reference, valid, probability, ids_unique
+    return reference, valid, probability, chip_ids
 
 
 def _confusion(truth: np.ndarray, prediction: np.ndarray) -> np.ndarray:
@@ -72,9 +74,9 @@ def _per_chip_confusions(
     reference: np.ndarray,
     valid: np.ndarray,
     lgb_probability: np.ndarray,
-    xgb_probability: np.ndarray,
+    secondary_probability: np.ndarray,
     *,
-    xgb_weight: float,
+    secondary_weight: float,
     lgb_multipliers: np.ndarray,
     ensemble_multipliers: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -87,8 +89,8 @@ def _per_chip_confusions(
             lgb_probability[index] * lgb_multipliers
         ).argmax(-1)[keep]
         combined = (
-            (1.0 - xgb_weight) * lgb_probability[index]
-            + xgb_weight * xgb_probability[index]
+            (1.0 - secondary_weight) * lgb_probability[index]
+            + secondary_weight * secondary_probability[index]
         ).astype(np.float32)
         ensemble_prediction = (combined * ensemble_multipliers).argmax(-1)[keep]
         lgb_matrices[index] = _confusion(truth, lgb_prediction)
@@ -154,33 +156,30 @@ def _observed(confusion: np.ndarray) -> dict[str, Any]:
 
 def build_report(args: argparse.Namespace) -> dict[str, Any]:
     lgb_path = Path(args.lgb_cache)
-    xgb_path = Path(args.xgb_cache)
+    secondary_path = Path(args.secondary_cache)
     comparison_path = Path(args.comparison)
     recipes_path = Path(args.v2_recipes)
-    lgb_ref, lgb_valid, lgb_probability, _ = _load_cache(
+    secondary_kind = str(args.secondary_kind)
+    probability_key = f"{secondary_kind}_probability"
+    lgb_ref, lgb_valid, lgb_probability, lgb_ids = _load_cache(
         lgb_path, "tree_probability"
     )
-    xgb_ref, xgb_valid, xgb_probability, xgb_ids_unique = _load_cache(
-        xgb_path, "xgb_probability"
+    secondary_ref, secondary_valid, secondary_probability, secondary_ids = (
+        _load_cache(secondary_path, probability_key)
     )
-    if not np.array_equal(lgb_ref, xgb_ref) or not np.array_equal(
-        lgb_valid, xgb_valid
+    if not np.array_equal(lgb_ref, secondary_ref) or not np.array_equal(
+        lgb_valid, secondary_valid
     ):
-        raise ValueError("LGB/XGB reference and valid arrays are not exactly equal")
-    if xgb_ids_unique is not True:
-        raise ValueError("XGB validation cache chip IDs are not unique")
+        raise ValueError("LGB/secondary reference and valid arrays are not exactly equal")
+    ids_order_equal = None
+    if lgb_ids is not None and secondary_ids is not None:
+        if not np.array_equal(lgb_ids.astype(str), secondary_ids.astype(str)):
+            raise ValueError("LGB/secondary cache chip ID order differs")
+        ids_order_equal = True
 
-    comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
     recipes = json.loads(recipes_path.read_text(encoding="utf-8"))
-    candidate = comparison["best_raw_combined_model_choice"]
-    if candidate["name"] != "xgb_weight_0.5":
-        raise ValueError(f"unexpected selected comparison candidate: {candidate['name']}")
-    xgb_weight = float(candidate["xgb_weight"])
-    if float(candidate["lgb_weight"]) != 1.0 - xgb_weight:
-        raise ValueError("candidate ensemble weights do not sum to one")
-    ensemble_multipliers = np.asarray(
-        candidate["final"]["class_multipliers"], dtype=np.float32
-    )
+    secondary_weight = float(args.secondary_weight)
+    ensemble_multipliers = np.asarray(args.secondary_multipliers, dtype=np.float32)
     v2_recipe = recipes["bs"]
     if v2_recipe.get("backend") != "tree":
         raise ValueError("V2 BS comparator is not the frozen tree recipe")
@@ -188,12 +187,29 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     if ensemble_multipliers.shape != (4,) or lgb_multipliers.shape != (4,):
         raise ValueError("BS recipes must contain four class multipliers")
 
+    comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
+    reported_candidate = comparison["best_raw_combined_model_choice"]
+    reported_multipliers = np.asarray(
+        reported_candidate["final"]["class_multipliers"], dtype=np.float32
+    )
+    expected_name = f"{secondary_kind}_weight_{secondary_weight:g}"
+    if reported_candidate.get("name") != expected_name:
+        raise ValueError(
+            f"comparison selected {reported_candidate.get('name')!r}, expected {expected_name!r}"
+        )
+    if (
+        float(reported_candidate[f"{secondary_kind}_weight"]) != secondary_weight
+        or float(reported_candidate["lgb_weight"]) != 1.0 - secondary_weight
+        or not np.array_equal(reported_multipliers, ensemble_multipliers)
+    ):
+        raise ValueError("comparison weights/multipliers differ from CLI recipe")
+
     lgb_by_chip, ensemble_by_chip = _per_chip_confusions(
         lgb_ref,
         lgb_valid,
         lgb_probability,
-        xgb_probability,
-        xgb_weight=xgb_weight,
+        secondary_probability,
+        secondary_weight=secondary_weight,
         lgb_multipliers=lgb_multipliers,
         ensemble_multipliers=ensemble_multipliers,
     )
@@ -203,10 +219,6 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "_postprocess_tuning"
     ]["final"]["confusion"]:
         raise ValueError("reconstructed V2 LGB confusion does not match its report")
-    if ensemble_observed["confusion_rows_truth_columns_prediction"] != candidate[
-        "final"
-    ]["confusion"]:
-        raise ValueError("reconstructed ensemble confusion does not match its report")
     if not np.isclose(
         lgb_observed["weighted_bs_score"],
         float(v2_recipe["selection_score"]),
@@ -214,9 +226,13 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         atol=1e-15,
     ):
         raise ValueError("reconstructed V2 LGB score does not match its report")
+    if ensemble_observed["confusion_rows_truth_columns_prediction"] != (
+        reported_candidate["final"]["confusion"]
+    ):
+        raise ValueError("reconstructed ensemble confusion does not match its report")
     if not np.isclose(
         ensemble_observed["weighted_bs_score"],
-        float(candidate["final"]["score"]),
+        float(reported_candidate["final"]["score"]),
         rtol=0.0,
         atol=1e-15,
     ):
@@ -236,6 +252,15 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         ensemble_observed["weighted_bs_score"] - lgb_observed["weighted_bs_score"]
     )
 
+    candidate_key = f"candidate_lgb_{secondary_kind}"
+    secondary_weight_key = f"{secondary_kind}_weight"
+    provenance_inputs = {
+        "lgb_cache_sha256": _sha256(lgb_path),
+        f"{secondary_kind}_cache_sha256": _sha256(secondary_path),
+        "v2_recipes_sha256": _sha256(recipes_path),
+    }
+    provenance_inputs["comparison_sha256"] = _sha256(comparison_path)
+
     return {
         "schema_version": 1,
         "scope": "validation-only paired chip bootstrap; no test data; no tuning",
@@ -243,6 +268,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "n_chips": len(lgb_by_chip),
         "bootstrap_replicates": args.replicates,
         "seed": args.seed,
+        "secondary_kind": secondary_kind,
         "resampling": {
             "unit": "BS validation chip",
             "draws_per_replicate": len(lgb_by_chip),
@@ -255,25 +281,34 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "reference_exactly_equal": True,
             "valid_exactly_equal": True,
             "probability_shape": list(lgb_probability.shape),
-            "xgb_cache_chip_ids_unique": True,
+            "lgb_cache_has_chip_ids": lgb_ids is not None,
+            f"{secondary_kind}_cache_has_chip_ids": secondary_ids is not None,
+            f"{secondary_kind}_cache_chip_ids_unique": (
+                True if secondary_ids is not None else None
+            ),
+            "chip_id_order_exactly_equal": ids_order_equal,
+            "baseline_reported_confusion_reproduced": True,
+            "baseline_reported_score_reproduced": True,
             "reported_confusions_reproduced": True,
             "reported_scores_reproduced": True,
+            "candidate_reported_confusion_reproduced": True,
+            "candidate_reported_score_reproduced": True,
         },
         "recipes": {
             "baseline_v2_lgb": {
                 "lgb_weight": 1.0,
-                "xgb_weight": 0.0,
+                secondary_weight_key: 0.0,
                 "class_multipliers": lgb_multipliers.astype(float).tolist(),
             },
-            "candidate_lgb_xgb": {
-                "lgb_weight": 1.0 - xgb_weight,
-                "xgb_weight": xgb_weight,
+            candidate_key: {
+                "lgb_weight": 1.0 - secondary_weight,
+                secondary_weight_key: secondary_weight,
                 "class_multipliers": ensemble_multipliers.astype(float).tolist(),
             },
         },
         "observed": {
             "baseline_v2_lgb": lgb_observed,
-            "candidate_lgb_xgb": ensemble_observed,
+            candidate_key: ensemble_observed,
             "paired_weighted_bs_score_delta_candidate_minus_baseline": float(
                 observed_delta
             ),
@@ -286,12 +321,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         },
         "provenance": {
             "generator": "ops/bootstrap_bs_comparison.py",
-            "inputs": {
-                "lgb_cache_sha256": _sha256(lgb_path),
-                "xgb_cache_sha256": _sha256(xgb_path),
-                "comparison_sha256": _sha256(comparison_path),
-                "v2_recipes_sha256": _sha256(recipes_path),
-            },
+            "inputs": provenance_inputs,
         },
     }
 
@@ -305,11 +335,26 @@ def main(argv: list[str] | None = None) -> int:
         default="artifacts/tree-v1/bs_validation_probabilities.npz",
     )
     parser.add_argument(
+        "--secondary-cache",
         "--xgb-cache",
+        dest="secondary_cache",
         default="artifacts/xgb-v1/bs/validation_probabilities.npz",
     )
     parser.add_argument(
-        "--comparison", default="artifacts/xgb-v1/bs/comparison.json"
+        "--secondary-kind", choices=("cnn", "xgb"), default="xgb"
+    )
+    parser.add_argument("--secondary-weight", type=float, default=0.5)
+    parser.add_argument(
+        "--secondary-multipliers",
+        type=float,
+        nargs=4,
+        default=(1.0, 3.0, 3.0, 1.0),
+        metavar=("CLASS0", "CLASS1", "CLASS2", "CLASS3"),
+    )
+    parser.add_argument(
+        "--comparison",
+        default="artifacts/xgb-v1/bs/comparison.json",
+        help="selection comparison report for the frozen secondary recipe",
     )
     parser.add_argument(
         "--v2-recipes", default="artifacts/ensemble-v2/selected_recipes.json"
@@ -320,6 +365,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.replicates <= 0:
         raise ValueError("replicates must be positive")
+    if not np.isfinite(args.secondary_weight) or not 0 <= args.secondary_weight <= 1:
+        raise ValueError("secondary-weight must be finite and within [0,1]")
+    if not all(np.isfinite(value) and value > 0 for value in args.secondary_multipliers):
+        raise ValueError("secondary-multipliers must be four positive finite values")
     report = json.dumps(build_report(args), indent=2, ensure_ascii=False) + "\n"
     if args.output == "-":
         sys.stdout.write(report)

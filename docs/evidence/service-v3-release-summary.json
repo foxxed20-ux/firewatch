@@ -1,0 +1,71 @@
+{
+  "release": "20260919-ensemble-4 / official-ensemble-v3",
+  "scope": "FireWatch V3 service on four prepared official TRAIN-validation scenes: CPU/runtime parity, public API and browser AF/BS analysis, GeoJSON/JSON/mask exports, versioned weights download and exercised V2 rollback. Full competition CLI, model selection/private-test quality and final jury delivery ZIP are separate deliverables.",
+  "profile": "web-service",
+  "target_environments": [
+    "Ubuntu 22.04 / Python 3.10.12 CPU app server, public HTTPS through nginx and SSH relay"
+  ],
+  "verdict": "PASS",
+  "generated_at": "2026-09-19T13:48:20.612607+00:00",
+  "source_report_sha256": "ffa00b7df5eef40fad9af41832168c4f4dca9643d0e2149344743b950eb6bf5c",
+  "scope_note": "Compatibility summary derived only from the verified V3 service release report. This does not claim private-test quality or unrestricted production readiness. Historical V2 evidence is preserved.",
+  "gates": [
+    {
+      "id": "build",
+      "status": "pass",
+      "observations": [
+        "30 service tests and syntax passed on Windows/Python 3.13.5. Explicit native-v3 status all_passed. Every packaged code file matches the checked candidate; release.env and manifest point to the exact ensemble-4 directory."
+      ]
+    },
+    {
+      "id": "deploy",
+      "status": "pass",
+      "observations": [
+        "37 package files verified. Installed unit reads current/release.env. Final current resolves to ensemble-4; service and tunnel active; public registry explicitly advertises official-ensemble-v3 ready."
+      ]
+    },
+    {
+      "id": "public-route",
+      "status": "pass",
+      "observations": [
+        "HTTPS API and browser reachable. V3 archive 14366427 bytes matches SHA256 bff193672985cbdc5e74a793d91d2224cd887965c6e4497b656523997cac2880. V2 archive is retained unchanged."
+      ]
+    },
+    {
+      "id": "api",
+      "status": "pass",
+      "observations": [
+        "91 HTTP checks including polling; 6 successful jobs. Four real AOI presets, raw-chip inference, no_data, idempotent repeat/conflict, invalid inputs and downloaded hashes passed."
+      ]
+    },
+    {
+      "id": "critical-e2e",
+      "status": "pass",
+      "observations": [
+        "BS159 displays 1037.3 ha with three severity classes and partial/train-data notice. Download contains 1171 polygons and V3 model IDs. AF126 displays/downloads 128 hotspots. Browser QA records no remaining gates or console errors."
+      ]
+    },
+    {
+      "id": "rollback",
+      "status": "pass",
+      "observations": [
+        "V2 rollback job job_71de1382cca848c28cda7834f95d5f5a succeeded and raw mask matches 724350dbfa3182a41b9a16364120c7cba5ba27be8961207f2af662ec1c086df0. V3 restored and six final public E2E jobs passed."
+      ]
+    },
+    {
+      "id": "model-parity",
+      "status": "pass",
+      "observations": [
+        "All 4 server CPU and all 4 public raw masks match the supplied V3 references byte-for-byte. BS server CPU timings 3.349 and 3.558 seconds; AF 1.943 cold and 0.300 seconds."
+      ]
+    },
+    {
+      "id": "geospatial",
+      "status": "pass",
+      "observations": [
+        "Area/class/coverage checks passed. Hole request: 644 features, API 616.2810443753459 ha, independent 616.2810443759703 ha. No geometry enters the hole and no class overlap."
+      ]
+    }
+  ],
+  "findings": []
+}

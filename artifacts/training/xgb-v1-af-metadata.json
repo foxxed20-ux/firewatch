@@ -1,0 +1,77 @@
+{
+  "format_version": 1,
+  "backend": "xgboost",
+  "xgboost_version": "3.4.1",
+  "task": "af",
+  "channels": 23,
+  "feature_names": [
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "solar_zenith",
+    "sensor_zenith",
+    "valid",
+    "landcover",
+    "dem",
+    "t2m",
+    "rh2m",
+    "wind_speed",
+    "I4_minus_I5",
+    "I4_minus_t2m",
+    "I5_minus_t2m",
+    "reflectance_nd21",
+    "reflectance_nd32",
+    "thermal_mean_3",
+    "thermal_contrast_3",
+    "thermal_mean_11",
+    "thermal_contrast_11",
+    "I4_contrast_11"
+  ],
+  "best_iteration": 435,
+  "selection_score": 0.8931087289433385,
+  "full_validation": {
+    "F1_af": 0.8931087289433385,
+    "threshold": 0.46297964453697205
+  },
+  "threshold": 0.46297964453697205,
+  "class_multipliers": [
+    1.0
+  ],
+  "sample": {
+    "sampled_pixels": 407955,
+    "population_counts": [
+      22011981,
+      8115
+    ],
+    "sampled_counts": [
+      399840,
+      8115
+    ],
+    "per_chip_per_class_cap": 1190,
+    "prior_weights": [
+      55.051973289315725,
+      1.0
+    ],
+    "weight_mean_normalized": true
+  },
+  "train_records": 336,
+  "val_records": 84,
+  "seed": 42,
+  "params": {
+    "tree_method": "hist",
+    "device": "cuda",
+    "max_bin": 128,
+    "max_depth": 6,
+    "eta": 0.07,
+    "subsample": 0.9,
+    "colsample_bytree": 0.9,
+    "lambda": 3.0,
+    "min_child_weight": 5.0,
+    "seed": 42,
+    "nthread": 1,
+    "objective": "binary:logistic",
+    "eval_metric": "logloss"
+  }
+}

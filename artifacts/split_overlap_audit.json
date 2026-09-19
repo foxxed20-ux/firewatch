@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "partitions": "train versus validation",
+    "geometry": "axis-aligned metadata bounds within the same EPSG",
+    "positive_area_rule": "overlap width > 0 and overlap height > 0",
+    "edge_or_corner_touching": "excluded from overlap",
+    "cross_epsg_comparison": "not performed",
+    "data": "train metadata only; no test data"
+  },
+  "inputs": {
+    "af_metadata": {
+      "name": "train_af_meta.csv",
+      "size_bytes": 65030,
+      "sha256": "8520f526ff67ad67fa310bb709b4dd29fa2bf7594ce82f7615e62a9165c3cc70"
+    },
+    "bs_metadata": {
+      "name": "train_bs_meta.csv",
+      "size_bytes": 41198,
+      "sha256": "f5e4506ee6b33e02ffdeb758f87c4447d0a3a112668fc7eee714da4756450183"
+    },
+    "split": {
+      "name": "split.json",
+      "size_bytes": 17133,
+      "sha256": "29a434ee0b2aff7b31cef766cd78bd452fd0241ad5bad3b8647b84ccb39a8f42"
+    }
+  },
+  "tasks": {
+    "af": {
+      "chips": 420,
+      "train_unique_grids": 53,
+      "validation_unique_grids": 17,
+      "exact_cross_split_unique_grids": 0,
+      "positive_area_cross_split_unique_grid_pairs": 0,
+      "affected_train_unique_grids": 0,
+      "affected_validation_unique_grids": 0,
+      "passes_no_positive_area_overlap": true
+    },
+    "bs": {
+      "chips": 224,
+      "train_unique_grids": 179,
+      "validation_unique_grids": 45,
+      "exact_cross_split_unique_grids": 0,
+      "positive_area_cross_split_unique_grid_pairs": 0,
+      "affected_train_unique_grids": 0,
+      "affected_validation_unique_grids": 0,
+      "passes_no_positive_area_overlap": true
+    }
+  },
+  "overall_passes_no_positive_area_overlap": true,
+  "privacy": "aggregate counts only; no chip IDs or coordinates"
+}

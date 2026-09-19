@@ -1,0 +1,19 @@
+{
+  "bundle_id": "official-ensemble-v3",
+  "observed_at_utc": "2026-09-19T13:45:41Z",
+  "inference_pid": 23149,
+  "selected_process_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "DEVICE": "cuda"
+  },
+  "gpu_process_observation": [
+    "23149, 774 MiB"
+  ],
+  "wrapper_sha256": "421031e5f07c61d2670f5c033efd51904c92199e389815239ce25da612ec4b6a",
+  "inference_source_sha256": "9626581be1be4fa5b57b05afa16ef10b7f3f2cf8ddf7ed8b0f44193afc0c379e",
+  "network_policy": "wrapper blocks socket.connect/connect_ex/create_connection before running inference.py",
+  "concurrent_job": "saved-weight CPU validation replay; no training",
+  "scope": "Observed execution environment, not an isolated performance benchmark"
+}

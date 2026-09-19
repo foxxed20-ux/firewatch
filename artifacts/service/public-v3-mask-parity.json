@@ -1,0 +1,31 @@
+{
+  "status": "pass",
+  "bundle_id": "official-ensemble-v3",
+  "comparison": "Downloaded public raw GeoTIFF arrays vs model-task CPU/offline reference and server CPU smoke",
+  "checks": [
+    {
+      "chip_id": "AF_tr_000126",
+      "sha256_c_order_uint8": "d1199018fc75783ce75fc6db419f4d5691a0e35bf09015cbf9d41a81486c5bdc",
+      "match": true,
+      "artifact": "artifacts/service/public-ensemble4/raw-predictions-mask_AF_tr_000126-mask_AF_tr_000126.tif"
+    },
+    {
+      "chip_id": "AF_tr_000165",
+      "sha256_c_order_uint8": "6458ec30899198a30cd30306ae27e13752f2d500bca2c39a9b09490970e2fdfa",
+      "match": true,
+      "artifact": "artifacts/service/public-ensemble4/raw-predictions-mask_AF_tr_000165-mask_AF_tr_000165.tif"
+    },
+    {
+      "chip_id": "BS_tr_000159",
+      "sha256_c_order_uint8": "6e19a64b51cf772d68d7c000b0ace8a725c65a309d2a8d11cf880b951f841c3e",
+      "match": true,
+      "artifact": "artifacts/service/public-ensemble4/raw-predictions-mask_BS_tr_000159-mask_BS_tr_000159.tif"
+    },
+    {
+      "chip_id": "BS_tr_000135",
+      "sha256_c_order_uint8": "2e231fbbcc4b897994daafa653fd0071c9eeee8c9b888c5e76bb1e43ba0faf4f",
+      "match": true,
+      "artifact": "artifacts/service/public-ensemble4/raw-predictions-mask_BS_tr_000135-mask_BS_tr_000135.tif"
+    }
+  ]
+}

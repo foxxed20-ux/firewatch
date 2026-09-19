@@ -1,0 +1,130 @@
+{
+  "status": "pass",
+  "release": "20260919-ensemble-4",
+  "bundle_id": "official-ensemble-v3",
+  "scope": "Four prepared official TRAIN-validation scenes; service integration only, not private-test quality",
+  "http_checks": 91,
+  "jobs": 6,
+  "public_e2e": "pass",
+  "server_cpu_parity": "4/4 pass",
+  "public_raw_mask_parity": "4/4 pass",
+  "rollback": "V3 to V2: actual BS159 raw mask matches V2 reference; restored V3",
+  "bs159": {
+    "modules": {
+      "bs": {
+        "data_status": "partial",
+        "burn_area_ha": 1037.3080083244995,
+        "severity_area_ha": {
+          "1": 250.58251939483546,
+          "2": 178.84489737305495,
+          "3": 607.8805915566091
+        }
+      }
+    },
+    "quality": {
+      "bs": {
+        "observed_area_ha": 2796.0547646245964,
+        "unobserved_area_ha": 8214.53419519657,
+        "coverage_fraction": 0.2539423435774148,
+        "cloud_fraction": null,
+        "observation_count": 1
+      },
+      "warnings": []
+    },
+    "browser_polygon_count": 1171
+  },
+  "positive_polygon_hole": {
+    "contours": 644,
+    "api_area_ha": 616.2810443753459,
+    "recomputed_area_ha": 616.2810443759703,
+    "inside_aoi": true,
+    "class_overlap": false
+  },
+  "weights_download": {
+    "status": "pass",
+    "url": "https://firewatch.151.247.25.189.nip.io/downloads/official-ensemble-v3.zip",
+    "bytes": 14366427,
+    "sha256": "bff193672985cbdc5e74a793d91d2224cd887965c6e4497b656523997cac2880",
+    "http_status": 200
+  },
+  "release_archive": {
+    "bytes": 14519062,
+    "sha256": "f44b15602676fad3a98c7d20df6d40e5955e09148acc44587d8e88dbf64f1aab"
+  },
+  "evidence_paths": [
+    "artifacts/service/public-ensemble4/evidence.json",
+    "artifacts/service/server-smoke-ensemble-v3.json",
+    "artifacts/service/public-v3-mask-parity.json",
+    "artifacts/service/rollback-v2-from-v3.json",
+    "artifacts/service/v3-polygon-hole/proof.json",
+    "artifacts/service/public-model-download-v3.json",
+    "artifacts/frontend/v3-bs-desktop.png",
+    "artifacts/frontend/v3-browser-qa.json",
+    "artifacts/service/release-evidence-v3.json",
+    "artifacts/service/release-report-v3.json"
+  ],
+  "open_gates": [],
+  "verdict": "PASS",
+  "browser_qa": "pass",
+  "browser_evidence": "artifacts/frontend/v3-browser-qa.json",
+  "release_gate_report": "artifacts/service/release-report-v3.json",
+  "release_gate_report_sha256": "ffa00b7df5eef40fad9af41832168c4f4dca9643d0e2149344743b950eb6bf5c",
+  "gates": [
+    {
+      "id": "build",
+      "status": "pass",
+      "observations": [
+        "30 service tests and syntax passed on Windows/Python 3.13.5. Explicit native-v3 status all_passed. Every packaged code file matches the checked candidate; release.env and manifest point to the exact ensemble-4 directory."
+      ]
+    },
+    {
+      "id": "deploy",
+      "status": "pass",
+      "observations": [
+        "37 package files verified. Installed unit reads current/release.env. Final current resolves to ensemble-4; service and tunnel active; public registry explicitly advertises official-ensemble-v3 ready."
+      ]
+    },
+    {
+      "id": "public-route",
+      "status": "pass",
+      "observations": [
+        "HTTPS API and browser reachable. V3 archive 14366427 bytes matches SHA256 bff193672985cbdc5e74a793d91d2224cd887965c6e4497b656523997cac2880. V2 archive is retained unchanged."
+      ]
+    },
+    {
+      "id": "api",
+      "status": "pass",
+      "observations": [
+        "91 HTTP checks including polling; 6 successful jobs. Four real AOI presets, raw-chip inference, no_data, idempotent repeat/conflict, invalid inputs and downloaded hashes passed."
+      ]
+    },
+    {
+      "id": "critical-e2e",
+      "status": "pass",
+      "observations": [
+        "BS159 displays 1037.3 ha with three severity classes and partial/train-data notice. Download contains 1171 polygons and V3 model IDs. AF126 displays/downloads 128 hotspots. Browser QA records no remaining gates or console errors."
+      ]
+    },
+    {
+      "id": "rollback",
+      "status": "pass",
+      "observations": [
+        "V2 rollback job job_71de1382cca848c28cda7834f95d5f5a succeeded and raw mask matches 724350dbfa3182a41b9a16364120c7cba5ba27be8961207f2af662ec1c086df0. V3 restored and six final public E2E jobs passed."
+      ]
+    },
+    {
+      "id": "model-parity",
+      "status": "pass",
+      "observations": [
+        "All 4 server CPU and all 4 public raw masks match the supplied V3 references byte-for-byte. BS server CPU timings 3.349 and 3.558 seconds; AF 1.943 cold and 0.300 seconds."
+      ]
+    },
+    {
+      "id": "geospatial",
+      "status": "pass",
+      "observations": [
+        "Area/class/coverage checks passed. Hole request: 644 features, API 616.2810443753459 ha, independent 616.2810443759703 ha. No geometry enters the hole and no class overlap."
+      ]
+    }
+  ]
+}
