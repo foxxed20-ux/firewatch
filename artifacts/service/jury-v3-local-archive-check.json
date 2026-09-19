@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "name": "FireWatch-models-ensemble-v3.zip",
+  "bytes": 17815459,
+  "sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+  "files": 125,
+  "crc_verified": true,
+  "internal_manifest_verified": true,
+  "nested_archive_names_checked": true,
+  "raw_raster_arrays_or_private_key_files": false,
+  "private_key_headers_found": false
+}

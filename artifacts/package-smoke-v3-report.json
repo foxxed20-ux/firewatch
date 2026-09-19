@@ -1,0 +1,70 @@
+{
+  "status": "pass",
+  "generated_at": "2026-09-19T13:55:26.301239+00:00",
+  "archive": {
+    "path": "dist/FireWatch-models-ensemble-v3.zip",
+    "bytes": 17815459,
+    "sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+    "crc": "pass",
+    "files": 125
+  },
+  "extraction": {
+    "path": "artifacts/package-smoke-v3",
+    "safe_member_paths": true,
+    "new_directory": true
+  },
+  "packaged_tests": {
+    "cwd": "artifacts/package-smoke-v3",
+    "python": ".venv-model/Scripts/python.exe",
+    "command": "python -B -m pytest -q -p no:cacheprovider tests/test_competition_contract.py tests/test_model_runtime_contract.py tests/test_postprocess_tuning.py tests/test_training_shapes.py tests/test_tree_contract.py",
+    "exit_code": 0,
+    "passed": 22
+  },
+  "offline_demo": {
+    "module": "ops.verify_bundle_demo",
+    "exit_code": 0,
+    "bundle_id": "official-ensemble-v3",
+    "device": "cpu",
+    "network_connections_blocked": true,
+    "masks": 4,
+    "output": "artifacts/package-smoke-v3-output",
+    "output_report_sha256": "4d4541b5d5622b549f53549ad0f117f74f03b69cdd89e57dbd6ac7c795635ae1",
+    "reference_report": "artifacts/ensemble-v3/demo_smoke/report.json",
+    "reference_report_sha256": "b71a992aad6706fc9043e9f3e132a3e849208b27ee5c68ca0c6fba501970730d",
+    "all_raw_mask_digests_match": true,
+    "raw_masks": {
+      "AF_tr_000126": {
+        "sha256_c_order_uint8": "d1199018fc75783ce75fc6db419f4d5691a0e35bf09015cbf9d41a81486c5bdc",
+        "shape": [
+          256,
+          256
+        ],
+        "dtype": "uint8"
+      },
+      "AF_tr_000165": {
+        "sha256_c_order_uint8": "6458ec30899198a30cd30306ae27e13752f2d500bca2c39a9b09490970e2fdfa",
+        "shape": [
+          256,
+          256
+        ],
+        "dtype": "uint8"
+      },
+      "BS_tr_000135": {
+        "sha256_c_order_uint8": "2e231fbbcc4b897994daafa653fd0071c9eeee8c9b888c5e76bb1e43ba0faf4f",
+        "shape": [
+          512,
+          512
+        ],
+        "dtype": "uint8"
+      },
+      "BS_tr_000159": {
+        "sha256_c_order_uint8": "6e19a64b51cf772d68d7c000b0ace8a725c65a309d2a8d11cf880b951f841c3e",
+        "shape": [
+          512,
+          512
+        ],
+        "dtype": "uint8"
+      }
+    }
+  }
+}

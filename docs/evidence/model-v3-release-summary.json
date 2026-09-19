@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "release": "official-ensemble-v3",
+  "scope": "FireWatch competition model CLI delivery: offline inference, submission, saved-weight validation replay and portable model bundle. Excludes web-service release, private-test quality and any production-readiness declaration.",
+  "verdict": "CONDITIONAL",
+  "generated_at": "2026-09-19T16:55:02.909388+03:00",
+  "source_report_sha256": "79e49e8e8eaa3e9c21f7f7bcb46df57d5203942fffa1ab79766d2c63a63879ed",
+  "archive": {
+    "name": "FireWatch-models-ensemble-v3.zip",
+    "bytes": 17815459,
+    "sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+    "members": 125,
+    "manifest_payload_members": 124
+  },
+  "candidate_digest": "3430466392994e75e2691fd961fb10f1f509964c6a395dbb2d059ecdd0c7109f",
+  "gates": [
+    {
+      "id": "delivery-integrity",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "FireWatch-models-ensemble-v3.zip: 17815459 bytes, sha256=45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247, 125 ZIP files; sidecar, CRC, inventory and every content hash matched."
+      ]
+    },
+    {
+      "id": "bundle-integrity",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "bundle_id=official-ensemble-v3; 7 bundle files; component hashes and embedded delivery bytes matched; component paths are POSIX-safe."
+      ]
+    },
+    {
+      "id": "submission-contract",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "status=pass; rows=447; AF chips=180; BS chips=89; template order/RLE/exclusivity passed; submission sha256=d5ba983965a146a68195bae8a38d7e53ae21fdefdf3709aade977f4eccfb739c."
+      ]
+    },
+    {
+      "id": "windows-native-smoke",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "Required native checks passed with exit 0 and complete cleanup: model-contracts, training-source-identity; all 40 checked snapshot files matched delivery ZIP bytes; offline smoke produced two AF uint8 256x256 masks and two BS uint8 512x512 masks with full count coverage for bundle_id=official-ensemble-v3."
+      ]
+    },
+    {
+      "id": "colab-cpu-validation-replay",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "within_tolerance=true; tolerance=0.005; absolute_delta={\"F1_af\": 0.0, \"IoU_burn\": 0.0, \"mIoU_sev\": 0.0}; Score=0.7071775413209714; AF chips=84; BS chips=45; selected recipe sha256=ee55b4120f7ad924af8163c81a159482d52d7bb357158f9d29dd1a93436c26b8. Expected metrics matched the packaged recipe and bundle selections exactly. This was replay, not retraining."
+      ]
+    },
+    {
+      "id": "ubuntu-platform-parity",
+      "hard": true,
+      "status": "pass",
+      "observations": [
+        "status=pass; 4 of 4 AF/BS masks matched byte-for-byte; bundle_id=official-ensemble-v3; Windows, local and server smoke digests agree."
+      ]
+    },
+    {
+      "id": "retraining-within-0.005",
+      "hard": false,
+      "status": "unverified",
+      "observations": []
+    },
+    {
+      "id": "private-test-score",
+      "hard": false,
+      "status": "unverified",
+      "observations": []
+    }
+  ],
+  "findings": [
+    {
+      "code": "generic-profile",
+      "message": "generic profile cannot produce PASS; select a platform profile",
+      "severity": "soft"
+    },
+    {
+      "code": "gate-not-closed",
+      "message": "retraining-within-0.005: unverified",
+      "severity": "soft"
+    },
+    {
+      "code": "gate-not-closed",
+      "message": "private-test-score: unverified",
+      "severity": "soft"
+    }
+  ],
+  "independent_archive_review": "PASS: CRC, all member hashes, three jury documents, 40 native snapshot files, no raw raster/cache/private helpers or credential material",
+  "extracted_archive_check": "22 model tests and four real offline CPU scenes passed using extracted archive; four mask hashes match V3 references",
+  "publication_scope": "Competition models, selected weights, submission and jury materials. Complete web-service source is in the linked Git repository."
+}

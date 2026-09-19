@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "checked_at_utc": "2026-09-19T13:56:38.183056+00:00",
+  "url": "https://firewatch.151.247.25.189.nip.io/downloads/FireWatch-models-ensemble-v3.zip",
+  "http_status": 200,
+  "bytes": 17815459,
+  "sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+  "tls_certificate_verification": true,
+  "full_public_response_hashed": true,
+  "expected_bytes": 17815459,
+  "expected_sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+  "service_readiness": {
+    "status": "ready",
+    "auth_required": false
+  },
+  "service_model": "official-ensemble-v3",
+  "runtime_restarted": false,
+  "local_archive_check": "artifacts/service/jury-v3-local-archive-check.json",
+  "extracted_package_smoke": "artifacts/package-smoke-v3-report.json"
+}
