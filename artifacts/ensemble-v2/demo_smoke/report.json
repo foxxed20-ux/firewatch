@@ -1,0 +1,135 @@
+{
+  "bundle_id": "official-ensemble-v2",
+  "device": "cpu",
+  "network_connections_blocked": true,
+  "masks": [
+    {
+      "chip_id": "AF_tr_000126",
+      "shape": [
+        256,
+        256
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "d1199018fc75783ce75fc6db419f4d5691a0e35bf09015cbf9d41a81486c5bdc",
+      "counts": {
+        "0": 65408,
+        "1": 128
+      },
+      "seconds": 3.553002299973741,
+      "provenance": {
+        "bundle_id": "official-ensemble-v2",
+        "task": "af",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "2b14edc51ee01937bc6b3931fbb6ba3a42a0fef683c036cdfcbbebf988deaf4e"
+          },
+          "tree": {
+            "metadata.json": "4908a5f88e14ae53d883074efd1e8681ad17d7ea8b0e7899514ff8f1d9fbe2a0",
+            "model.txt": "b419568136813964e43e06078661fb009e20341373b9fa7a771f9a6b4914efc2"
+          }
+        }
+      }
+    },
+    {
+      "chip_id": "AF_tr_000165",
+      "shape": [
+        256,
+        256
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "6458ec30899198a30cd30306ae27e13752f2d500bca2c39a9b09490970e2fdfa",
+      "counts": {
+        "0": 65424,
+        "1": 112
+      },
+      "seconds": 0.24234429997159168,
+      "provenance": {
+        "bundle_id": "official-ensemble-v2",
+        "task": "af",
+        "backend": "ensemble",
+        "device": {
+          "cnn": "cpu",
+          "tree": "cpu"
+        },
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "cnn": {
+            "best.pt": "2b14edc51ee01937bc6b3931fbb6ba3a42a0fef683c036cdfcbbebf988deaf4e"
+          },
+          "tree": {
+            "metadata.json": "4908a5f88e14ae53d883074efd1e8681ad17d7ea8b0e7899514ff8f1d9fbe2a0",
+            "model.txt": "b419568136813964e43e06078661fb009e20341373b9fa7a771f9a6b4914efc2"
+          }
+        }
+      }
+    },
+    {
+      "chip_id": "BS_tr_000135",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "a838e1a43d7c9eabe021f0f2fde52bf9feb26dba9d4464b0a298e66a4c2a7975",
+      "counts": {
+        "0": 211706,
+        "1": 10901,
+        "2": 28434,
+        "3": 11103
+      },
+      "seconds": 2.9494888999615796,
+      "provenance": {
+        "bundle_id": "official-ensemble-v2",
+        "task": "bs",
+        "backend": "lightgbm",
+        "device": "cpu",
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "metadata.json": "88bf7cd787d44f995b153a668cd4c75d43eba36a7f5c5e7942260cd4203ef2a7",
+          "model.txt": "13dcf6f140c5f1aa8d70ed6e740342077e1ab6c12cc28c70521da4c0905b7fc4"
+        }
+      }
+    },
+    {
+      "chip_id": "BS_tr_000159",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "uint8",
+      "sha256_c_order_uint8": "724350dbfa3182a41b9a16364120c7cba5ba27be8961207f2af662ec1c086df0",
+      "counts": {
+        "0": 205178,
+        "1": 13908,
+        "2": 23348,
+        "3": 19710
+      },
+      "seconds": 3.160942599992268,
+      "provenance": {
+        "bundle_id": "official-ensemble-v2",
+        "task": "bs",
+        "backend": "lightgbm",
+        "device": "cpu",
+        "feature_version": "official-named-v1",
+        "score_is_calibrated_probability": false,
+        "cloud_policy": "All pixels predicted; observation_valid is informational, never an output mask",
+        "model_sha256": {
+          "metadata.json": "88bf7cd787d44f995b153a668cd4c75d43eba36a7f5c5e7942260cd4203ef2a7",
+          "model.txt": "13dcf6f140c5f1aa8d70ed6e740342077e1ab6c12cc28c70521da4c0905b7fc4"
+        }
+      }
+    }
+  ]
+}

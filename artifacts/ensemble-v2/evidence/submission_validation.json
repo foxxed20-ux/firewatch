@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "data_rows": 447,
+  "header": true,
+  "af_chips": 180,
+  "bs_chips": 89,
+  "template_order_exact": true,
+  "canonical_rle": true,
+  "bs_classes_exclusive": true,
+  "submission_sha256": "b72745e00115d82973ff2c0d6ddbba70f07fab9d042a315ff7ba826c72b6fce8"
+}

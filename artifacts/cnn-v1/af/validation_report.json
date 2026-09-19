@@ -1,0 +1,62 @@
+{
+  "recipe": {
+    "task": "af",
+    "selected": "ensemble_cnn_0.25",
+    "backend": "ensemble",
+    "selection_score": 0.9295086969789441,
+    "F1_af": 0.9295086969789441,
+    "threshold": 0.7525456547737122
+  },
+  "candidates": {
+    "cnn": {
+      "metrics": {
+        "F1_af": 0.9045743714026053,
+        "threshold": 0.8265324831008911
+      },
+      "selection_score": 0.9045743714026053
+    },
+    "tree": {
+      "metrics": {
+        "F1_af": 0.902135231316726,
+        "threshold": 0.7955632209777832
+      },
+      "selection_score": 0.902135231316726
+    },
+    "ensemble_cnn_0": {
+      "metrics": {
+        "F1_af": 0.902135231316726,
+        "threshold": 0.7955632209777832
+      },
+      "selection_score": 0.902135231316726
+    },
+    "ensemble_cnn_0.25": {
+      "metrics": {
+        "F1_af": 0.9295086969789441,
+        "threshold": 0.7525456547737122
+      },
+      "selection_score": 0.9295086969789441
+    },
+    "ensemble_cnn_0.5": {
+      "metrics": {
+        "F1_af": 0.9252249457027614,
+        "threshold": 0.7758512496948242
+      },
+      "selection_score": 0.9252249457027614
+    },
+    "ensemble_cnn_0.75": {
+      "metrics": {
+        "F1_af": 0.9185185185185185,
+        "threshold": 0.7552114725112915
+      },
+      "selection_score": 0.9185185185185185
+    },
+    "ensemble_cnn_1": {
+      "metrics": {
+        "F1_af": 0.9045743714026053,
+        "threshold": 0.8265324831008911
+      },
+      "selection_score": 0.9045743714026053
+    }
+  },
+  "validation_chips": 84
+}

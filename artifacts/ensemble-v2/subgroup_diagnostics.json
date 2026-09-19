@@ -1,0 +1,579 @@
+{
+  "schema_version": 1,
+  "scope": "posthoc train-validation subgroup diagnostics; no test data; no tuning",
+  "aggregation": "global pixel micro counts within each chip group; never macro-averaged over chips",
+  "cache_order_contract": {
+    "status": "verified",
+    "records": "prepared_records order filtered by task then split=val",
+    "evaluate_source": "load_records preserves JSON order; _load_probability appends in that order; np.stack preserves it",
+    "af_records": 84,
+    "af_cache_axis0": 84,
+    "bs_records": 45,
+    "bs_cache_axis0": 45,
+    "selected_recipe_metrics_reproduced": true,
+    "bs_final_confusion_reproduced": true
+  },
+  "provenance": {
+    "generator": "ops/subgroup_diagnostics.py",
+    "inputs": {
+      "records": {
+        "path": "artifacts/prepared_records.json",
+        "sha256": "d16e4fbffb4a4645ac18e82ac965bac84ac00bf7da7f72ea3a500193e3c1f86f"
+      },
+      "recipes": {
+        "path": "artifacts/ensemble-v2/selected_recipes.json",
+        "sha256": "1845f3c203f72618b75aa9ec18b84d35f8dda055a3f9fd0587d5ff3f2ae25e2d"
+      },
+      "af_cache": {
+        "path": "artifacts/cnn-v1/af/af_validation_probabilities.npz",
+        "sha256": "fd422aa539cbaafeac5228081e559e092ad71c75f15cbb8c70dc0170811e3f64"
+      },
+      "bs_cache": {
+        "path": "artifacts/tree-v1/bs_validation_probabilities.npz",
+        "sha256": "1561868431317a3dea32d021a21b79183fa8558db8210f3ea0dca912d8a0cb33"
+      }
+    }
+  },
+  "recipe": {
+    "af": {
+      "cnn_weight": 0.25,
+      "tree_weight": 0.75,
+      "threshold": 0.7525456547737122
+    },
+    "bs": {
+      "class_multipliers": [
+        1.0,
+        3.0,
+        3.0,
+        0.800000011920929
+      ]
+    }
+  },
+  "af": {
+    "global": {
+      "chips": 84,
+      "scored_pixels": 5505024,
+      "tp": 1523,
+      "fp": 144,
+      "fn": 87,
+      "precision": 0.913617276544691,
+      "recall": 0.9459627329192547,
+      "f1": 0.9295086969789441
+    },
+    "by_acquisition_year": {
+      "2019": {
+        "chips": 11,
+        "scored_pixels": 720896,
+        "tp": 117,
+        "fp": 22,
+        "fn": 6,
+        "precision": 0.841726618705036,
+        "recall": 0.9512195121951219,
+        "f1": 0.8931297709923665
+      },
+      "2020": {
+        "chips": 17,
+        "scored_pixels": 1114112,
+        "tp": 526,
+        "fp": 29,
+        "fn": 35,
+        "precision": 0.9477477477477477,
+        "recall": 0.9376114081996435,
+        "f1": 0.942652329749104
+      },
+      "2021": {
+        "chips": 13,
+        "scored_pixels": 851968,
+        "tp": 239,
+        "fp": 21,
+        "fn": 16,
+        "precision": 0.9192307692307692,
+        "recall": 0.9372549019607843,
+        "f1": 0.9281553398058252
+      },
+      "2022": {
+        "chips": 16,
+        "scored_pixels": 1048576,
+        "tp": 149,
+        "fp": 15,
+        "fn": 9,
+        "precision": 0.9085365853658537,
+        "recall": 0.9430379746835443,
+        "f1": 0.9254658385093167
+      },
+      "2023": {
+        "chips": 11,
+        "scored_pixels": 720896,
+        "tp": 168,
+        "fp": 32,
+        "fn": 4,
+        "precision": 0.84,
+        "recall": 0.9767441860465116,
+        "f1": 0.9032258064516129
+      },
+      "2024": {
+        "chips": 16,
+        "scored_pixels": 1048576,
+        "tp": 324,
+        "fp": 25,
+        "fn": 17,
+        "precision": 0.9283667621776505,
+        "recall": 0.9501466275659824,
+        "f1": 0.9391304347826087
+      }
+    }
+  },
+  "bs": {
+    "global": {
+      "chips": 45,
+      "scored_pixels": 11796480,
+      "confusion_rows_truth_columns_prediction": [
+        [
+          9945702,
+          379674,
+          237018,
+          47802
+        ],
+        [
+          86799,
+          377938,
+          10787,
+          161
+        ],
+        [
+          17180,
+          11993,
+          424496,
+          3832
+        ],
+        [
+          14861,
+          3,
+          15488,
+          222746
+        ]
+      ],
+      "burn": {
+        "tp": 1067444,
+        "fp": 664494,
+        "fn": 118840,
+        "precision": 0.616329221946744,
+        "recall": 0.899821627873258,
+        "iou": 0.5767542082302686
+      },
+      "severity_iou": {
+        "1": 0.4357362325691326,
+        "2": 0.5889283207129915,
+        "3": 0.7305710527955709
+      },
+      "miou_severity": 0.5850785353592317
+    },
+    "by_pre_acquisition_year": {
+      "2019": {
+        "chips": 2,
+        "scored_pixels": 524288,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            415407,
+            11154,
+            1184,
+            88
+          ],
+          [
+            5395,
+            21911,
+            610,
+            7
+          ],
+          [
+            566,
+            886,
+            46410,
+            674
+          ],
+          [
+            534,
+            0,
+            1930,
+            17532
+          ]
+        ],
+        "burn": {
+          "tp": 89960,
+          "fp": 12426,
+          "fn": 6495,
+          "precision": 0.8786357509815795,
+          "recall": 0.9326628997978332,
+          "iou": 0.8262231243283952
+        },
+        "severity_iou": {
+          "1": 0.548282160998924,
+          "2": 0.8880597014925373,
+          "3": 0.8443053214543703
+        },
+        "miou_severity": 0.7602157279819438
+      },
+      "2020": {
+        "chips": 15,
+        "scored_pixels": 3932160,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            3252421,
+            128219,
+            111439,
+            18238
+          ],
+          [
+            32388,
+            138478,
+            4009,
+            58
+          ],
+          [
+            5351,
+            4454,
+            158685,
+            1128
+          ],
+          [
+            6626,
+            3,
+            5354,
+            65309
+          ]
+        ],
+        "burn": {
+          "tp": 377478,
+          "fp": 257896,
+          "fn": 44365,
+          "precision": 0.5941036303027823,
+          "recall": 0.8948305412203118,
+          "iou": 0.5553278537791712
+        },
+        "severity_iou": {
+          "1": 0.4501753849854848,
+          "2": 0.5463983196749536,
+          "3": 0.6752657264568427
+        },
+        "miou_severity": 0.557279810372427
+      },
+      "2021": {
+        "chips": 1,
+        "scored_pixels": 262144,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            204669,
+            16551,
+            2,
+            0
+          ],
+          [
+            3945,
+            30935,
+            45,
+            0
+          ],
+          [
+            13,
+            54,
+            1735,
+            62
+          ],
+          [
+            1,
+            0,
+            280,
+            3852
+          ]
+        ],
+        "burn": {
+          "tp": 36963,
+          "fp": 16553,
+          "fn": 3959,
+          "precision": 0.6906906345765752,
+          "recall": 0.903254972875226,
+          "iou": 0.6431143975641583
+        },
+        "severity_iou": {
+          "1": 0.6003299049097613,
+          "2": 0.7918758557736193,
+          "3": 0.9182359952324195
+        },
+        "miou_severity": 0.7701472519719333
+      },
+      "2022": {
+        "chips": 6,
+        "scored_pixels": 1572864,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            1268739,
+            74732,
+            38743,
+            13668
+          ],
+          [
+            10103,
+            44995,
+            1134,
+            65
+          ],
+          [
+            896,
+            770,
+            52927,
+            770
+          ],
+          [
+            123,
+            0,
+            2748,
+            62451
+          ]
+        ],
+        "burn": {
+          "tp": 165860,
+          "fp": 127143,
+          "fn": 11122,
+          "precision": 0.5660692893929413,
+          "recall": 0.9371574510402187,
+          "iou": 0.5453678586107686
+        },
+        "severity_iou": {
+          "1": 0.34139105759527766,
+          "2": 0.5401375678654529,
+          "3": 0.782348888192922
+        },
+        "miou_severity": 0.5546258378845509
+      },
+      "2023": {
+        "chips": 4,
+        "scored_pixels": 1048576,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            913472,
+            22420,
+            7273,
+            4214
+          ],
+          [
+            3879,
+            33292,
+            1220,
+            12
+          ],
+          [
+            267,
+            1776,
+            44652,
+            611
+          ],
+          [
+            286,
+            0,
+            1647,
+            13555
+          ]
+        ],
+        "burn": {
+          "tp": 96765,
+          "fp": 33907,
+          "fn": 4432,
+          "precision": 0.7405182441532999,
+          "recall": 0.9562042353034181,
+          "iou": 0.7162260184746566
+        },
+        "severity_iou": {
+          "1": 0.5318295819422035,
+          "2": 0.777286495143265,
+          "3": 0.6669126691266912
+        },
+        "miou_severity": 0.6586762487373866
+      },
+      "2024": {
+        "chips": 17,
+        "scored_pixels": 4456448,
+        "confusion_rows_truth_columns_prediction": [
+          [
+            3890994,
+            126598,
+            78377,
+            11594
+          ],
+          [
+            31089,
+            108327,
+            3769,
+            19
+          ],
+          [
+            10087,
+            4053,
+            120087,
+            587
+          ],
+          [
+            7291,
+            0,
+            3529,
+            60047
+          ]
+        ],
+        "burn": {
+          "tp": 300418,
+          "fp": 216569,
+          "fn": 48467,
+          "precision": 0.5810939153208882,
+          "recall": 0.8610802986657494,
+          "iou": 0.5312863645849176
+        },
+        "severity_iou": {
+          "1": 0.39556334556608425,
+          "2": 0.5446394151182146,
+          "3": 0.7228743062828801
+        },
+        "miou_severity": 0.554359022322393
+      }
+    },
+    "by_cloud_fraction": {
+      "definition": {
+        "<=0.1": "cloud_frac <= 0.1",
+        "(0.1,0.3]": "0.1 < cloud_frac <= 0.3",
+        ">0.3": "cloud_frac > 0.3"
+      },
+      "groups": {
+        "(0.1,0.3]": {
+          "chips": 10,
+          "scored_pixels": 2621440,
+          "confusion_rows_truth_columns_prediction": [
+            [
+              2027613,
+              130093,
+              93590,
+              20096
+            ],
+            [
+              36283,
+              143429,
+              4216,
+              83
+            ],
+            [
+              5252,
+              3743,
+              121443,
+              1004
+            ],
+            [
+              4433,
+              0,
+              3203,
+              26959
+            ]
+          ],
+          "burn": {
+            "tp": 304080,
+            "fp": 243779,
+            "fn": 45968,
+            "precision": 0.5550333206171661,
+            "recall": 0.8686808666240059,
+            "iou": 0.5120683296650371
+          },
+          "severity_iou": {
+            "1": 0.45125170286332733,
+            "2": 0.522445590683628,
+            "3": 0.483326759654344
+          },
+          "miou_severity": 0.4856746844004331
+        },
+        "<=0.1": {
+          "chips": 33,
+          "scored_pixels": 8650752,
+          "confusion_rows_truth_columns_prediction": [
+            [
+              7434357,
+              231883,
+              138919,
+              27672
+            ],
+            [
+              48461,
+              229157,
+              6206,
+              77
+            ],
+            [
+              11630,
+              8068,
+              294548,
+              2804
+            ],
+            [
+              10017,
+              3,
+              12155,
+              194795
+            ]
+          ],
+          "burn": {
+            "tp": 747813,
+            "fp": 398474,
+            "fn": 70108,
+            "precision": 0.6523785055575088,
+            "recall": 0.9142851204456176,
+            "iou": 0.6147780942868065
+          },
+          "severity_iou": {
+            "1": 0.4374435673993758,
+            "2": 0.6209769569708853,
+            "3": 0.7869773717997923
+          },
+          "miou_severity": 0.6151326320566844
+        },
+        ">0.3": {
+          "chips": 2,
+          "scored_pixels": 524288,
+          "confusion_rows_truth_columns_prediction": [
+            [
+              483732,
+              17698,
+              4509,
+              34
+            ],
+            [
+              2055,
+              5352,
+              365,
+              1
+            ],
+            [
+              298,
+              182,
+              8505,
+              24
+            ],
+            [
+              411,
+              0,
+              130,
+              992
+            ]
+          ],
+          "burn": {
+            "tp": 15551,
+            "fp": 22241,
+            "fn": 2764,
+            "precision": 0.41148920406435224,
+            "recall": 0.8490854490854491,
+            "iou": 0.3834451129302693
+          },
+          "severity_iou": {
+            "1": 0.20863056952403228,
+            "2": 0.6069364161849711,
+            "3": 0.6231155778894473
+          },
+          "miou_severity": 0.4795608545328169
+        }
+      }
+    }
+  }
+}

@@ -232,7 +232,11 @@ def evaluate_task(records, task, cnn_dir=None, tree_dir=None, cache_dir=None):
     if cache_dir:
         cache_dir = Path(cache_dir)
         cache_dir.mkdir(parents=True, exist_ok=True)
-        payload = {"reference": np.stack(reference), "valid": np.stack(valid)}
+        payload = {
+            "reference": np.stack(reference),
+            "valid": np.stack(valid),
+            "chip_ids": np.asarray([record.id for record in records]),
+        }
         if cnn_p:
             payload["cnn_probability"] = np.stack(cnn_p).astype(np.float32)
         if tree_p:

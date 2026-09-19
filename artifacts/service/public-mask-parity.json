@@ -1,0 +1,27 @@
+{
+  "status": "pass",
+  "bundle_id": "official-ensemble-v2",
+  "comparison": "Downloaded public raw GeoTIFF arrays vs independent model-task CPU/offline reference",
+  "checks": [
+    {
+      "chip_id": "AF_tr_000126",
+      "sha256_c_order_uint8": "d1199018fc75783ce75fc6db419f4d5691a0e35bf09015cbf9d41a81486c5bdc",
+      "match": true
+    },
+    {
+      "chip_id": "AF_tr_000165",
+      "sha256_c_order_uint8": "6458ec30899198a30cd30306ae27e13752f2d500bca2c39a9b09490970e2fdfa",
+      "match": true
+    },
+    {
+      "chip_id": "BS_tr_000135",
+      "sha256_c_order_uint8": "a838e1a43d7c9eabe021f0f2fde52bf9feb26dba9d4464b0a298e66a4c2a7975",
+      "match": true
+    },
+    {
+      "chip_id": "BS_tr_000159",
+      "sha256_c_order_uint8": "724350dbfa3182a41b9a16364120c7cba5ba27be8961207f2af662ec1c086df0",
+      "match": true
+    }
+  ]
+}
