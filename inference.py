@@ -12,6 +12,8 @@ from competition.service_bridge import predict_features, describe_models
 
 
 def main(argv=None):
+    # A valid fragmented 512x512 severity mask can exceed csv's 128 KiB default.
+    csv.field_size_limit(10 * 1024 * 1024)
     p = argparse.ArgumentParser()
     p.add_argument("--data-dir", required=True)
     p.add_argument("--output", required=True)
