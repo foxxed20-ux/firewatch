@@ -1,61 +1,680 @@
 <!doctype html>
 <html lang="ru">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101d2b">
-<meta name="description" content="FireWatch — спутниковый анализ природных пожаров: термоточки, контуры и оценка повреждений."><title>FireWatch · Мониторинг пожаров</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="vendor/leaflet-1.9.4.css"><link rel="stylesheet" href="styles.css?v=ee2d94d0621a">
-</head>
-<body>
-<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
-<symbol id="i-fire" viewBox="0 0 24 24"><path d="M13 3c1 5-5 5-3 10 1-1 2-2 2-4 4 2 6 5 5 8a6 6 0 0 1-11-1C4 11 10 8 13 3Z"/></symbol>
-<symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15"/></symbol>
-<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
-<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2 7M3 5v6h6m3-5v6l4 2"/></symbol>
-<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3h.01"/></symbol>
-<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></symbol>
-<symbol id="i-rect" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM3 3h4v4H3zm14 0h4v4h-4zM3 17h4v4H3zm14 0h4v4h-4z"/></symbol>
-<symbol id="i-poly" viewBox="0 0 24 24"><path d="m5 5 14-2 2 14-12 4L3 12Z"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="3" r="2"/><circle cx="21" cy="17" r="2"/></symbol>
-<symbol id="i-layers" viewBox="0 0 24 24"><path d="m2 7 10-5 10 5-10 5Zm0 5 10 5 10-5M2 17l10 5 10-5"/></symbol>
-<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
-<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
-<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7a9 9 0 1 0 1 9M21 2v6h-6"/></symbol>
-<symbol id="i-satellite" viewBox="0 0 24 24"><path d="m8 10 6-6 6 6-6 6Zm-5 3 4-4 4 4-4 4Zm10 4 4-4 4 4-4 4M2 19a3 3 0 0 1 3 3m-3-7a7 7 0 0 1 7 7"/></symbol>
-<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
-<symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
-<symbol id="i-report" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8m-8 4h6"/></symbol>
-</defs></svg>
-<a class="skip-link" href="#parameters">Перейти к параметрам анализа</a>
-<div class="app-shell">
-<header class="topbar">
-<a class="brand" href="/" aria-label="FireWatch — главная"><span class="brand-mark"><svg><use href="#i-fire"/></svg></span><span>fire<span class="brand-light">watch</span><small>СПУТНИКОВЫЙ МОНИТОРИНГ</small></span></a>
-<nav class="main-nav" aria-label="Основная навигация"><button class="nav-item current" id="nav-map" aria-current="page"><svg><use href="#i-map"/></svg>Мониторинг</button><button class="nav-item" id="open-history"><svg><use href="#i-history"/></svg>История<span class="nav-count" id="history-count" hidden>0</span></button></nav>
-<div class="topbar-meta"><span class="service-status"><i id="api-dot" class="pulse"></i><span id="api-state">Подключение…</span></span><button class="icon-button" id="refresh-data" title="Обновить каталог и модели" aria-label="Обновить каталог и модели"><svg><use href="#i-refresh"/></svg></button><button class="icon-button" id="open-help" aria-label="Как пользоваться FireWatch" title="Как пользоваться"><svg><use href="#i-help"/></svg></button></div>
-</header>
-<div class="workspace-heading"><div><p class="eyebrow">ЦЕНТР НАБЛЮДЕНИЙ</p><h1>Мониторинг пожаров<span class="title-dot">.</span></h1></div><div class="heading-note"><svg><use href="#i-satellite"/></svg><span>От спутникового наблюдения<br><b>к оценке территории</b></span></div></div>
-<nav class="mobile-tabs" aria-label="Панели рабочего экрана"><button data-panel="parameters" class="active">Параметры</button><button data-panel="map-section">Карта</button><button data-panel="results-panel">Результат</button></nav>
-<main class="workspace">
-<aside class="control-panel mobile-active" id="parameters" aria-label="Параметры анализа" tabindex="-1">
-<div class="panel-heading"><h2>Новый анализ</h2><span class="micro-label">НАСТРОЙКА</span></div>
-<div class="controls-scroll">
-<section class="control-section first"><div class="section-label"><span>01</span><h3>Спутниковые данные</h3></div><label class="sr-only" for="dataset">Источник сцен</label><select id="dataset" disabled><option>Загружаем доступные сцены…</option></select><div class="dataset-meta"><span id="dataset-scenes">— сцен</span><span id="dataset-sources">Каталог данных</span></div><div class="training-note" id="training-note" hidden><svg><use href="#i-info"/></svg><span><b>Обучающий пример</b><small>Демонстрация на train-сценах. Не оценка на независимых данных.</small></span></div><p class="field-note" id="dataset-note">Проверяем доступное покрытие.</p></section>
-<section class="control-section"><div class="section-label"><span>02</span><h3>Территория интереса</h3><button class="text-button reset" id="clear-aoi" title="Очистить выбранную область">Сбросить</button></div><button class="coverage-button" id="use-coverage" disabled><svg><use href="#i-target"/></svg><span>Вся территория набора</span><svg><use href="#i-chevron"/></svg></button><div class="draw-tools" role="group" aria-label="Нарисовать область"><button id="draw-rect" class="tool" aria-pressed="false"><svg><use href="#i-rect"/></svg>Прямоугольник</button><button id="draw-poly" class="tool" aria-pressed="false"><svg><use href="#i-poly"/></svg>Полигон</button></div><p class="field-note aoi-note" id="aoi-note">Выберите покрытие набора или нарисуйте область на карте.</p><details class="coordinate-details"><summary>Задать координаты вручную<span>WGS 84</span></summary><div class="bbox-grid"><label>Запад<input id="bbox-w" inputmode="decimal" placeholder="Долгота"></label><label>Юг<input id="bbox-s" inputmode="decimal" placeholder="Широта"></label><label>Восток<input id="bbox-e" inputmode="decimal" placeholder="Долгота"></label><label>Север<input id="bbox-n" inputmode="decimal" placeholder="Широта"></label></div><button class="text-button" id="apply-bbox">Применить координаты</button></details></section>
-<section class="control-section"><div class="section-label"><span>03</span><h3>Период наблюдений</h3></div><div class="date-grid"><label for="date-start">С<input id="date-start" type="date"></label><span class="date-separator">—</span><label for="date-end">По<input id="date-end" type="date"></label></div><p class="field-note">Включая последний день · время UTC</p></section>
-<section class="control-section"><div class="section-label"><span>04</span><h3>Что анализируем</h3></div><div class="tasks"><label class="task-option"><input id="task-af" type="checkbox" checked><span class="task-symbol af"><svg><use href="#i-fire"/></svg></span><span><b>Активные пожары</b><small>Термоточки · AF</small></span></label><label class="task-option"><input id="task-bs" type="checkbox" checked><span class="task-symbol bs"><svg><use href="#i-layers"/></svg></span><span><b>Выгоревшая территория</b><small>Площадь и степень повреждения · BS</small></span></label></div><div class="model-row"><label for="model">Модель анализа</label><select id="model" disabled><option>Загрузка…</option></select><p class="field-note" id="model-note">Проверяем готовность модели.</p></div></section>
-<section class="token-row" id="token-wrap" hidden><label for="token">Токен доступа<input id="token" type="password" autocomplete="off" placeholder="Введите токен сервиса"></label><button id="apply-token" class="secondary-button">Подключиться</button><p class="field-note">Хранится только в этой сессии браузера.</p></section>
-</div><div class="run-area"><button class="run-button" id="run-analysis" disabled><svg><use href="#i-satellite"/></svg><span id="run-label">Запустить анализ</span><svg><use href="#i-arrow"/></svg></button><p class="run-hint" id="run-hint">Загружаем каталог и модели…</p></div>
-</aside>
-<section class="map-section" id="map-section" aria-label="Карта анализа"><div id="map" class="dark-map" aria-label="Интерактивная карта. Область также можно задать координатами в параметрах."></div><div class="map-topline"><div class="map-title"><span class="map-live-mark"><svg><use href="#i-map"/></svg></span><div><b id="map-title">Обзор территории</b><small id="map-subtitle">Выберите данные для анализа</small></div></div><div class="basemap-switch" role="group" aria-label="Стиль карты"><button id="map-dark" class="active" aria-pressed="true">Тёмная</button><button id="map-light" aria-pressed="false">Светлая</button></div></div><div class="map-tools"><button id="zoom-coverage" class="map-tool" title="Показать покрытие" aria-label="Показать покрытие набора"><svg><use href="#i-layers"/></svg></button><button id="zoom-aoi" class="map-tool" title="Показать выбранную область" aria-label="Показать выбранную область"><svg><use href="#i-target"/></svg></button><span class="tool-divider"></span><button id="zoom-in" class="map-tool" aria-label="Приблизить">+</button><button id="zoom-out" class="map-tool" aria-label="Отдалить">−</button></div>
-<div class="draw-message" id="draw-message" hidden><span class="draw-dot"></span><span id="draw-instruction"></span><button id="finish-polygon" hidden>Завершить</button><button id="cancel-draw" aria-label="Отменить рисование"><svg><use href="#i-close"/></svg></button></div><div class="map-notice" id="map-notice" hidden>Подложка недоступна. Контуры и выбор области продолжают работать.</div><div class="map-onboarding" id="empty-map"><span class="empty-orbit"><svg><use href="#i-target"/></svg></span><h2>Начните с территории</h2><p>Выберите доступный набор данных слева.<br>Его покрытие появится на карте.</p></div>
-<div class="map-legend" id="legend" hidden><div class="legend-heading"><svg><use href="#i-layers"/></svg><b>Слои результатов</b><button id="toggle-legend" aria-expanded="true" aria-label="Свернуть легенду">−</button></div><div id="legend-body"><label class="legend-row"><input id="layer-af" type="checkbox" checked><span class="legend-dot fire"></span><span>Термоточки</span><b id="layer-af-count">—</b></label><label class="legend-row"><input id="layer-bs" type="checkbox" checked><span class="legend-dot burn"></span><span>Выгоревшая территория</span></label><div class="severity-keys"><span><i class="sev-1"></i>Слабая</span><span><i class="sev-2"></i>Средняя</span><span><i class="sev-3"></i>Сильная</span></div><label class="opacity-label" for="layer-opacity">Непрозрачность <output id="opacity-value">65%</output></label><input type="range" id="layer-opacity" min="10" max="100" value="65"></div></div><div class="map-bottom"><span class="coordinate-readout" id="cursor-coords">WGS 84</span><span class="map-scale-note" id="map-context">Контуры появятся после анализа</span></div></section>
-<aside class="results-panel" id="results-panel" aria-label="Результаты анализа"><div class="panel-heading"><h2>Сводка анализа</h2><span class="status-pill neutral" id="job-status">ОЖИДАНИЕ</span></div><div class="results-scroll"><div class="result-header"><p class="eyebrow">ТЕРРИТОРИЯ ПОД НАБЛЮДЕНИЕМ</p><h3 id="result-title">Всё начинается<br>с одного снимка</h3><p id="result-context" class="field-note">Задайте параметры — FireWatch выделит очаги и оценит последствия пожара.</p></div>
-<div class="job-progress" id="job-progress" hidden role="status"><div class="progress-head"><b id="progress-title">Анализ территории</b><span id="progress-percent">0%</span></div><div class="progress-track" role="progressbar" aria-label="Прогресс анализа" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progress-bar"></i></div><p id="progress-text">Создаём задание…</p><ol class="progress-steps"><li id="step-queued">Подготовка данных</li><li id="step-running">Обработка моделью</li><li id="step-result">Формирование результата</li></ol></div>
-<div id="result-empty" class="result-empty"><div class="scan-visual" aria-hidden="true"><div class="scan-grid"></div><svg><use href="#i-satellite"/></svg><i></i></div><div class="empty-step"><span>1</span><p><b>Выберите территорию</b>Вся сцена или свой контур на карте</p></div><div class="empty-step"><span>2</span><p><b>Запустите анализ</b>Очаги, контуры и гектары по классам</p></div><div class="empty-step"><span>3</span><p><b>Сохраните результат</b>Геоданные и сводка для дальнейшей работы</p></div></div><div class="result-notice" id="result-notice" hidden></div>
-<div id="result-content" hidden><div class="metrics"><article><div class="metric-top"><svg><use href="#i-fire"/></svg><small>Термоточки</small></div><strong id="hotspot-count">—</strong><span id="af-metric-note">обнаружений AF</span></article><article><div class="metric-top"><svg><use href="#i-layers"/></svg><small>Площадь гари</small></div><strong id="burn-area">—</strong><span id="bs-metric-note">гектаров</span></article></div><section class="severity-card"><div class="card-heading"><h3>Степень повреждения</h3><span>ГА</span></div><div class="severity-stack" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div><div class="severity-bars"><div><i class="sev-1"></i><span>Слабая</span><b id="sev1">—</b></div><div><i class="sev-2"></i><span>Средняя</span><b id="sev2">—</b></div><div><i class="sev-3"></i><span>Сильная</span><b id="sev3">—</b></div></div><p id="severity-note" class="field-note">Площадь по наблюдаемым данным.</p></section><section class="quality-card"><div class="card-heading"><h3>Покрытие наблюдений</h3><svg><use href="#i-satellite"/></svg></div><div id="quality-list"></div></section><section class="warnings" id="warnings" hidden><h3>Что важно учесть</h3><ul id="warnings-list"></ul></section><section class="downloads"><div class="card-heading"><h3>Скачать результаты</h3><svg><use href="#i-download"/></svg></div><div id="download-list"></div></section><button id="open-report" class="report-button"><svg><use href="#i-report"/></svg>Справка по территории<svg><use href="#i-arrow"/></svg></button></div>
-<div id="error-box" class="error-box" role="alert" hidden><b>Не удалось продолжить</b><p id="error-message"></p><button id="retry-action" hidden>Повторить</button></div></div><div class="results-footer"><svg><use href="#i-info"/></svg><span>Результаты требуют проверки специалистом.</span></div></aside>
-</main><footer class="app-footer"><span>FIREWATCH <i>/</i> Геоаналитика природных пожаров</span><span id="footer-status">Источник данных — каталог сервиса</span><span>КОСМОХАКАТОН 2026</span></footer></div>
-<dialog id="history-dialog" class="app-dialog"><div class="dialog-heading"><div><p class="eyebrow">ВАША РАБОТА</p><h2>История анализов</h2></div><button class="icon-button" data-close-dialog aria-label="Закрыть историю"><svg><use href="#i-close"/></svg></button></div><p class="field-note">Последние 20 заданий в этом браузере. Выберите анализ, чтобы открыть его результат.</p><div id="history-list"></div></dialog>
-<dialog id="help-dialog" class="app-dialog"><div class="dialog-heading"><div><p class="eyebrow">КРАТКОЕ РУКОВОДСТВО</p><h2>От территории к результату</h2></div><button class="icon-button" data-close-dialog aria-label="Закрыть руководство"><svg><use href="#i-close"/></svg></button></div><ol class="help-list"><li><b>Выберите спутниковые данные.</b><p>Каталог содержит сцены, доступные сервису. Обучающие примеры отмечены отдельно.</p></li><li><b>Задайте область и период.</b><p>Используйте всё покрытие набора, нарисуйте прямоугольник двумя щелчками или полигон по вершинам. Завершите полигон кнопкой на карте. Даты включают оба выбранных дня, время — UTC.</p></li><li><b>Запустите анализ.</b><p>AF показывает термоточки, BS — контуры выгоревшей территории и три степени повреждения. Доступность модулей зависит от сцен и готовности модели.</p></li><li><b>Изучите результат.</b><p>Нажмите на очаг или контур, переключайте слои и скачайте GeoJSON или JSON-справку. Площади рассчитаны сервисом в гектарах.</p></li></ol><div class="help-note"><svg><use href="#i-info"/></svg><p>«Нет данных» не означает «нет пожара». Проверяйте покрытие и ограничения наблюдений.</p></div><a class="text-button" href="/docs" target="_blank" rel="noopener">Документация API ↗</a></dialog>
-<dialog id="report-dialog" class="app-dialog report-dialog"><div class="dialog-heading"><div><p class="eyebrow">FIREWATCH / АНАЛИТИЧЕСКАЯ СПРАВКА</p><h2>Оценка территории</h2></div><button class="icon-button" data-close-dialog aria-label="Закрыть справку"><svg><use href="#i-close"/></svg></button></div><div id="report-body"></div><div class="dialog-actions"><button id="print-report" class="secondary-button"><svg><use href="#i-report"/></svg>Печать / PDF</button><button id="download-report" class="run-button"><svg><use href="#i-download"/></svg>Скачать JSON</button></div></dialog>
-<div class="toast" id="toast" role="status" hidden></div>
-<script src="vendor/leaflet-1.9.4.js"></script><script src="core.js?v=d7cb7ca94b1a"></script><script src="app.js?v=ae3d6dba79f4"></script>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101d2b" />
+    <meta
+      name="description"
+      content="FireWatch — спутниковый анализ природных пожаров: термоточки, контуры и оценка повреждений."
+    />
+    <title>FireWatch · Мониторинг пожаров</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="vendor/leaflet-1.9.4.css" />
+    <link rel="stylesheet" href="styles.css?v=73efe76fac04" />
+  </head>
+  <body>
+    <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <symbol id="i-fire" viewBox="0 0 24 24">
+          <path
+            d="M13 3c1 5-5 5-3 10 1-1 2-2 2-4 4 2 6 5 5 8a6 6 0 0 1-11-1C4 11 10 8 13 3Z"
+          />
+        </symbol>
+        <symbol id="i-map" viewBox="0 0 24 24">
+          <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-history" viewBox="0 0 24 24">
+          <path d="M3 11a9 9 0 1 1 2 7M3 5v6h6m3-5v6l4 2" />
+        </symbol>
+        <symbol id="i-help" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3h.01" />
+        </symbol>
+        <symbol id="i-target" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="7" />
+          <path d="M12 2v5m0 10v5M2 12h5m10 0h5" />
+        </symbol>
+        <symbol id="i-rect" viewBox="0 0 24 24">
+          <path
+            d="M5 5h14v14H5zM3 3h4v4H3zm14 0h4v4h-4zM3 17h4v4H3zm14 0h4v4h-4z"
+          />
+        </symbol>
+        <symbol id="i-poly" viewBox="0 0 24 24">
+          <path d="m5 5 14-2 2 14-12 4L3 12Z" />
+          <circle cx="5" cy="5" r="2" />
+          <circle cx="19" cy="3" r="2" />
+          <circle cx="21" cy="17" r="2" />
+        </symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24">
+          <path d="m2 7 10-5 10 5-10 5Zm0 5 10 5 10-5M2 17l10 5 10-5" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M6 18 18 6" />
+        </symbol>
+        <symbol id="i-refresh" viewBox="0 0 24 24">
+          <path d="M20 7a9 9 0 1 0 1 9M21 2v6h-6" />
+        </symbol>
+        <symbol id="i-satellite" viewBox="0 0 24 24">
+          <path
+            d="m8 10 6-6 6 6-6 6Zm-5 3 4-4 4 4-4 4Zm10 4 4-4 4 4-4 4M2 19a3 3 0 0 1 3 3m-3-7a7 7 0 0 1 7 7"
+          />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v6m0-10h.01" />
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24">
+          <path d="m9 5 7 7-7 7" />
+        </symbol>
+        <symbol id="i-report" viewBox="0 0 24 24">
+          <path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8m-8 4h6" />
+        </symbol>
+      </defs>
+    </svg>
+    <a class="skip-link" href="#parameters">Перейти к параметрам анализа</a>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="FireWatch — главная"
+          ><span class="brand-mark"
+            ><svg><use href="#i-fire" /></svg></span
+          ><span
+            >fire<span class="brand-light">watch</span
+            ><small>СПУТНИКОВЫЙ МОНИТОРИНГ</small></span
+          ></a
+        >
+        <nav class="main-nav" aria-label="Основная навигация">
+          <button class="nav-item current" id="nav-map" aria-current="page">
+            <svg><use href="#i-map" /></svg>Мониторинг</button
+          ><button class="nav-item" id="open-history">
+            <svg><use href="#i-history" /></svg>История<span
+              class="nav-count"
+              id="history-count"
+              hidden
+              >0</span
+            >
+          </button>
+        </nav>
+        <div class="topbar-meta">
+          <span class="service-status"
+            ><i id="api-dot" class="pulse"></i
+            ><span id="api-state">Подключение…</span></span
+          ><button
+            class="icon-button"
+            id="refresh-data"
+            title="Обновить каталог и модели"
+            aria-label="Обновить каталог и модели"
+          >
+            <svg><use href="#i-refresh" /></svg></button
+          ><button
+            class="icon-button"
+            id="open-help"
+            aria-label="Как пользоваться FireWatch"
+            title="Как пользоваться"
+          >
+            <svg><use href="#i-help" /></svg>
+          </button>
+        </div>
+      </header>
+      <div class="workspace-heading">
+        <div>
+          <p class="eyebrow">ЦЕНТР НАБЛЮДЕНИЙ</p>
+          <h1>Мониторинг пожаров<span class="title-dot">.</span></h1>
+        </div>
+        <div class="heading-note">
+          <svg><use href="#i-satellite" /></svg
+          ><span
+            >От спутникового наблюдения<br /><b>к оценке территории</b></span
+          >
+        </div>
+      </div>
+      <nav class="mobile-tabs" aria-label="Панели рабочего экрана">
+        <button data-panel="parameters" class="active">Параметры</button
+        ><button data-panel="map-section">Карта</button
+        ><button data-panel="results-panel">Результат</button>
+      </nav>
+      <main class="workspace">
+        <aside
+          class="control-panel mobile-active"
+          id="parameters"
+          aria-label="Параметры анализа"
+          tabindex="-1"
+        >
+          <div class="panel-heading">
+            <h2>Новый анализ</h2>
+            <span class="micro-label">НАСТРОЙКА</span>
+          </div>
+          <div class="controls-scroll">
+            <section class="control-section first">
+              <div class="section-label">
+                <span>01</span>
+                <h3>Спутниковые данные</h3>
+              </div>
+              <label class="sr-only" for="dataset">Источник сцен</label
+              ><select id="dataset" disabled>
+                <option>Загружаем доступные сцены…</option>
+              </select>
+              <div class="dataset-meta">
+                <span id="dataset-scenes">— сцен</span
+                ><span id="dataset-sources">Каталог данных</span>
+              </div>
+              <div class="training-note" id="training-note" hidden>
+                <svg><use href="#i-info" /></svg
+                ><span
+                  ><b>Обучающий пример</b
+                  ><small
+                    >Демонстрация на train-сценах. Не оценка на независимых
+                    данных.</small
+                  ></span
+                >
+              </div>
+              <p class="field-note" id="dataset-note">
+                Проверяем доступное покрытие.
+              </p>
+            </section>
+            <section class="control-section">
+              <div class="section-label">
+                <span>02</span>
+                <h3>Территория интереса</h3>
+                <button
+                  class="text-button reset"
+                  id="clear-aoi"
+                  title="Очистить выбранную область"
+                >
+                  Сбросить
+                </button>
+              </div>
+              <button class="coverage-button" id="use-coverage" disabled>
+                <svg><use href="#i-target" /></svg
+                ><span>Вся территория набора</span
+                ><svg><use href="#i-chevron" /></svg>
+              </button>
+              <div
+                class="draw-tools"
+                role="group"
+                aria-label="Нарисовать область"
+              >
+                <button id="draw-rect" class="tool" aria-pressed="false">
+                  <svg><use href="#i-rect" /></svg>Прямоугольник</button
+                ><button id="draw-poly" class="tool" aria-pressed="false">
+                  <svg><use href="#i-poly" /></svg>Полигон
+                </button>
+              </div>
+              <p class="field-note aoi-note" id="aoi-note">
+                Выберите покрытие набора или нарисуйте область на карте.
+              </p>
+              <details class="coordinate-details">
+                <summary>Задать координаты вручную<span>WGS 84</span></summary>
+                <div class="bbox-grid">
+                  <label
+                    >Запад<input
+                      id="bbox-w"
+                      inputmode="decimal"
+                      placeholder="Долгота" /></label
+                  ><label
+                    >Юг<input
+                      id="bbox-s"
+                      inputmode="decimal"
+                      placeholder="Широта" /></label
+                  ><label
+                    >Восток<input
+                      id="bbox-e"
+                      inputmode="decimal"
+                      placeholder="Долгота" /></label
+                  ><label
+                    >Север<input
+                      id="bbox-n"
+                      inputmode="decimal"
+                      placeholder="Широта"
+                  /></label>
+                </div>
+                <button class="text-button" id="apply-bbox">
+                  Применить координаты
+                </button>
+              </details>
+            </section>
+            <section class="control-section">
+              <div class="section-label">
+                <span>03</span>
+                <h3>Период наблюдений</h3>
+              </div>
+              <div class="date-grid">
+                <label for="date-start"
+                  >С<input id="date-start" type="date" /></label
+                ><span class="date-separator">—</span
+                ><label for="date-end"
+                  >По<input id="date-end" type="date"
+                /></label>
+              </div>
+              <p class="field-note">Включая последний день · время UTC</p>
+            </section>
+            <section class="control-section">
+              <div class="section-label">
+                <span>04</span>
+                <h3>Что анализируем</h3>
+              </div>
+              <div class="tasks">
+                <label class="task-option"
+                  ><input id="task-af" type="checkbox" checked /><span
+                    class="task-symbol af"
+                    ><svg><use href="#i-fire" /></svg></span
+                  ><span
+                    ><b>Активные пожары</b><small>Термоточки · AF</small></span
+                  ></label
+                ><label class="task-option"
+                  ><input id="task-bs" type="checkbox" checked /><span
+                    class="task-symbol bs"
+                    ><svg><use href="#i-layers" /></svg></span
+                  ><span
+                    ><b>Выгоревшая территория</b
+                    ><small>Площадь и степень повреждения · BS</small></span
+                  ></label
+                >
+              </div>
+              <div class="model-row">
+                <label for="model">Модель анализа</label
+                ><select id="model" disabled>
+                  <option>Загрузка…</option>
+                </select>
+                <p class="field-note" id="model-note">
+                  Проверяем готовность модели.
+                </p>
+              </div>
+            </section>
+            <section class="token-row" id="token-wrap" hidden>
+              <label for="token"
+                >Токен доступа<input
+                  id="token"
+                  type="password"
+                  autocomplete="off"
+                  placeholder="Введите токен сервиса" /></label
+              ><button id="apply-token" class="secondary-button">
+                Подключиться
+              </button>
+              <p class="field-note">Хранится только в этой сессии браузера.</p>
+            </section>
+          </div>
+          <div class="run-area">
+            <button class="run-button" id="run-analysis" disabled>
+              <svg><use href="#i-satellite" /></svg
+              ><span id="run-label">Запустить анализ</span
+              ><svg><use href="#i-arrow" /></svg>
+            </button>
+            <p class="run-hint" id="run-hint">Загружаем каталог и модели…</p>
+          </div>
+        </aside>
+        <section
+          class="map-section"
+          id="map-section"
+          aria-label="Карта анализа"
+        >
+          <div
+            id="map"
+            class="dark-map"
+            aria-label="Интерактивная карта. Область также можно задать координатами в параметрах."
+          ></div>
+          <div class="map-topline">
+            <div class="map-title">
+              <span class="map-live-mark"
+                ><svg><use href="#i-map" /></svg
+              ></span>
+              <div>
+                <b id="map-title">Обзор территории</b
+                ><small id="map-subtitle">Выберите данные для анализа</small>
+              </div>
+            </div>
+            <div class="basemap-switch" role="group" aria-label="Стиль карты">
+              <button id="map-dark" class="active" aria-pressed="true">
+                Тёмная</button
+              ><button id="map-light" aria-pressed="false">Светлая</button>
+            </div>
+          </div>
+          <div class="map-tools">
+            <button
+              id="zoom-coverage"
+              class="map-tool"
+              title="Показать покрытие"
+              aria-label="Показать покрытие набора"
+            >
+              <svg><use href="#i-layers" /></svg></button
+            ><button
+              id="zoom-aoi"
+              class="map-tool"
+              title="Показать выбранную область"
+              aria-label="Показать выбранную область"
+            >
+              <svg><use href="#i-target" /></svg></button
+            ><span class="tool-divider"></span
+            ><button id="zoom-in" class="map-tool" aria-label="Приблизить">
+              +</button
+            ><button id="zoom-out" class="map-tool" aria-label="Отдалить">
+              −
+            </button>
+          </div>
+          <div class="draw-message" id="draw-message" hidden>
+            <span class="draw-dot"></span><span id="draw-instruction"></span
+            ><button id="finish-polygon" hidden>Завершить</button
+            ><button id="cancel-draw" aria-label="Отменить рисование">
+              <svg><use href="#i-close" /></svg>
+            </button>
+          </div>
+          <div class="map-notice" id="map-notice" hidden>
+            Подложка недоступна. Контуры и выбор области продолжают работать.
+          </div>
+          <div class="map-onboarding" id="empty-map">
+            <span class="empty-orbit"
+              ><svg><use href="#i-target" /></svg
+            ></span>
+            <h2>Начните с территории</h2>
+            <p>
+              Выберите доступный набор данных слева.<br />Его покрытие появится
+              на карте.
+            </p>
+          </div>
+          <div class="map-legend" id="legend" hidden>
+            <div class="legend-heading">
+              <svg><use href="#i-layers" /></svg><b>Слои результатов</b
+              ><button
+                id="toggle-legend"
+                aria-expanded="true"
+                aria-label="Свернуть легенду"
+              >
+                −
+              </button>
+            </div>
+            <div id="legend-body">
+              <label class="legend-row"
+                ><input id="layer-af" type="checkbox" checked /><span
+                  class="legend-dot fire"
+                ></span
+                ><span>Термоточки</span><b id="layer-af-count">—</b></label
+              ><label class="legend-row"
+                ><input id="layer-bs" type="checkbox" checked /><span
+                  class="legend-dot burn"
+                ></span
+                ><span>Выгоревшая территория</span></label
+              >
+              <div class="severity-keys">
+                <span><i class="sev-1"></i>Слабая</span
+                ><span><i class="sev-2"></i>Средняя</span
+                ><span><i class="sev-3"></i>Сильная</span>
+              </div>
+              <label class="opacity-label" for="layer-opacity"
+                >Непрозрачность <output id="opacity-value">65%</output></label
+              ><input
+                type="range"
+                id="layer-opacity"
+                min="10"
+                max="100"
+                value="65"
+              />
+            </div>
+          </div>
+          <div class="map-bottom">
+            <span class="coordinate-readout" id="cursor-coords">WGS 84</span
+            ><span class="map-scale-note" id="map-context"
+              >Контуры появятся после анализа</span
+            >
+          </div>
+        </section>
+        <aside
+          class="results-panel"
+          id="results-panel"
+          aria-label="Результаты анализа"
+        >
+          <div class="panel-heading">
+            <h2>Сводка анализа</h2>
+            <span class="status-pill neutral" id="job-status">ОЖИДАНИЕ</span>
+          </div>
+          <div class="results-scroll">
+            <div class="result-header">
+              <p class="eyebrow">ТЕРРИТОРИЯ ПОД НАБЛЮДЕНИЕМ</p>
+              <h3 id="result-title">Всё начинается<br />с одного снимка</h3>
+              <p id="result-context" class="field-note">
+                Задайте параметры — FireWatch выделит очаги и оценит последствия
+                пожара.
+              </p>
+            </div>
+            <div class="job-progress" id="job-progress" hidden role="status">
+              <div class="progress-head">
+                <b id="progress-title">Анализ территории</b
+                ><span id="progress-percent">0%</span>
+              </div>
+              <div
+                class="progress-track"
+                role="progressbar"
+                aria-label="Прогресс анализа"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <i id="progress-bar"></i>
+              </div>
+              <p id="progress-text">Создаём задание…</p>
+              <ol class="progress-steps">
+                <li id="step-queued">Подготовка данных</li>
+                <li id="step-running">Обработка моделью</li>
+                <li id="step-result">Формирование результата</li>
+              </ol>
+            </div>
+            <div id="result-empty" class="result-empty">
+              <div class="scan-visual" aria-hidden="true">
+                <div class="scan-grid"></div>
+                <svg><use href="#i-satellite" /></svg><i></i>
+              </div>
+              <div class="empty-step">
+                <span>1</span>
+                <p>
+                  <b>Выберите территорию</b>Вся сцена или свой контур на карте
+                </p>
+              </div>
+              <div class="empty-step">
+                <span>2</span>
+                <p>
+                  <b>Запустите анализ</b>Очаги, контуры и гектары по классам
+                </p>
+              </div>
+              <div class="empty-step">
+                <span>3</span>
+                <p>
+                  <b>Сохраните результат</b>Геоданные и сводка для дальнейшей
+                  работы
+                </p>
+              </div>
+            </div>
+            <div class="result-notice" id="result-notice" hidden></div>
+            <div id="result-content" hidden>
+              <div class="metrics">
+                <article>
+                  <div class="metric-top">
+                    <svg><use href="#i-fire" /></svg><small>Термоточки</small>
+                  </div>
+                  <strong id="hotspot-count">—</strong
+                  ><span id="af-metric-note">обнаружений AF</span>
+                </article>
+                <article>
+                  <div class="metric-top">
+                    <svg><use href="#i-layers" /></svg
+                    ><small>Площадь гари</small>
+                  </div>
+                  <strong id="burn-area">—</strong
+                  ><span id="bs-metric-note">гектаров</span>
+                </article>
+              </div>
+              <section class="severity-card">
+                <div class="card-heading">
+                  <h3>Степень повреждения</h3>
+                  <span>ГА</span>
+                </div>
+                <div class="severity-stack" aria-hidden="true">
+                  <i class="s1"></i><i class="s2"></i><i class="s3"></i>
+                </div>
+                <div class="severity-bars">
+                  <div>
+                    <i class="sev-1"></i><span>Слабая</span><b id="sev1">—</b>
+                  </div>
+                  <div>
+                    <i class="sev-2"></i><span>Средняя</span><b id="sev2">—</b>
+                  </div>
+                  <div>
+                    <i class="sev-3"></i><span>Сильная</span><b id="sev3">—</b>
+                  </div>
+                </div>
+                <p id="severity-note" class="field-note">
+                  Площадь по наблюдаемым данным.
+                </p>
+              </section>
+              <section class="quality-card">
+                <div class="card-heading">
+                  <h3>Покрытие наблюдений</h3>
+                  <svg><use href="#i-satellite" /></svg>
+                </div>
+                <div id="quality-list"></div>
+              </section>
+              <section class="warnings" id="warnings" hidden>
+                <h3>Что важно учесть</h3>
+                <ul id="warnings-list"></ul>
+              </section>
+              <section class="downloads">
+                <div class="card-heading">
+                  <h3>Скачать результаты</h3>
+                  <svg><use href="#i-download" /></svg>
+                </div>
+                <div id="download-list"></div>
+              </section>
+              <button id="open-report" class="report-button">
+                <svg><use href="#i-report" /></svg>Справка по территории<svg>
+                  <use href="#i-arrow" />
+                </svg>
+              </button>
+            </div>
+            <div id="error-box" class="error-box" role="alert" hidden>
+              <b>Не удалось продолжить</b>
+              <p id="error-message"></p>
+              <button id="retry-action" hidden>Повторить</button>
+            </div>
+          </div>
+          <div class="results-footer">
+            <svg><use href="#i-info" /></svg
+            ><span>Результаты требуют проверки специалистом.</span>
+          </div>
+        </aside>
+      </main>
+      <footer class="app-footer">
+        <span>FIREWATCH <i>/</i> Геоаналитика природных пожаров</span
+        ><span id="footer-status">Источник данных — каталог сервиса</span
+        ><span>КОСМОХАКАТОН 2026</span>
+      </footer>
+    </div>
+    <dialog id="history-dialog" class="app-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">ВАША РАБОТА</p>
+          <h2>История анализов</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close-dialog
+          aria-label="Закрыть историю"
+        >
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="field-note">
+        Последние 20 заданий в этом браузере. Выберите анализ, чтобы открыть его
+        результат.
+      </p>
+      <div id="history-list"></div>
+    </dialog>
+    <dialog id="help-dialog" class="app-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">КРАТКОЕ РУКОВОДСТВО</p>
+          <h2>От территории к результату</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close-dialog
+          aria-label="Закрыть руководство"
+        >
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <ol class="help-list">
+        <li>
+          <b>Выберите спутниковые данные.</b>
+          <p>
+            Каталог содержит сцены, доступные сервису. Обучающие примеры
+            отмечены отдельно.
+          </p>
+        </li>
+        <li>
+          <b>Задайте область и период.</b>
+          <p>
+            Используйте всё покрытие набора, нарисуйте прямоугольник двумя
+            щелчками или полигон по вершинам. Завершите полигон кнопкой на
+            карте. Даты включают оба выбранных дня, время — UTC.
+          </p>
+        </li>
+        <li>
+          <b>Запустите анализ.</b>
+          <p>
+            AF показывает термоточки, BS — контуры выгоревшей территории и три
+            степени повреждения. Доступность модулей зависит от сцен и
+            готовности модели.
+          </p>
+        </li>
+        <li>
+          <b>Изучите результат.</b>
+          <p>
+            Нажмите на очаг или контур, переключайте слои и скачайте GeoJSON или
+            JSON-справку. Площади рассчитаны сервисом в гектарах.
+          </p>
+        </li>
+      </ol>
+      <div class="help-note">
+        <svg><use href="#i-info" /></svg>
+        <p>
+          «Нет данных» не означает «нет пожара». Проверяйте покрытие и
+          ограничения наблюдений.
+        </p>
+      </div>
+      <a class="text-button" href="/docs" target="_blank" rel="noopener"
+        >Документация API ↗</a
+      >
+    </dialog>
+    <dialog id="report-dialog" class="app-dialog report-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">FIREWATCH / АНАЛИТИЧЕСКАЯ СПРАВКА</p>
+          <h2>Оценка территории</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close-dialog
+          aria-label="Закрыть справку"
+        >
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <div id="report-body"></div>
+      <div class="dialog-actions">
+        <button id="print-report" class="secondary-button">
+          <svg><use href="#i-report" /></svg>Печать / PDF</button
+        ><button id="download-report" class="run-button">
+          <svg><use href="#i-download" /></svg>Скачать JSON
+        </button>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <script src="vendor/leaflet-1.9.4.js"></script>
+    <script src="core.js?v=a4d6a6bcbfcb"></script>
+    <script src="app.js?v=ceead2100ac1"></script>
+  </body>
+</html>
