@@ -8,6 +8,7 @@ __pycache__/
 var/
 data/service/
 deploy/private/
+deploy/tunnel_key
 artifacts/service/*.tar.gz
 artifacts/service/*.zip
 artifacts/service/releases/
@@ -25,6 +26,8 @@ Thumbs.db
 .idea/
 .vscode/
 .codex/
+.codex-finalizer/
+.chart-data-*/
 
 # Data, learned weights and generated predictions are release assets, not source
 data/

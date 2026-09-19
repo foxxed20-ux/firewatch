@@ -1,0 +1,20 @@
+# Keep source diffs portable and readable on every platform.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Do not attempt text conversion or diffing for generated binary assets.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.tif binary
+*.tiff binary
+*.npy binary
+*.npz binary
+*.pt binary
+*.pth binary
