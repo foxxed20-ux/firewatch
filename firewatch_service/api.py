@@ -21,7 +21,14 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import Settings
 from .jobs import IdempotencyConflict, JobStore, QueueFull, run_isolated
-from .schemas import AnalysisRequest, PredictionRequest
+from .imagery import ImageryGateway, ImageryProvider
+from .imagery_provider import ImageryError
+from .schemas import (
+    AnalysisRequest,
+    ImageryPreviewRequest,
+    ImagerySearchRequest,
+    PredictionRequest,
+)
 
 SAFE_ARTIFACT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
@@ -87,6 +94,7 @@ def create_app(
     models_fn: Callable[[Path], dict[str, Any]] | None = None,
     analysis_fn: Callable[..., dict[str, Any]] | None = None,
     prediction_fn: Callable[..., dict[str, Any]] | None = None,
+    imagery_provider: ImageryProvider | None = None,
 ) -> FastAPI:
     settings = settings or Settings.from_env()
     settings.ensure_directories()
@@ -115,6 +123,7 @@ def create_app(
     request_times: dict[str, deque[float]] = defaultdict(deque)
     registry_lock = threading.Lock()
     registry_cache: tuple[float, dict[str, Any]] | None = None
+    imagery = ImageryGateway(settings, imagery_provider)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
@@ -123,6 +132,7 @@ def create_app(
             executor.submit(run_job, queued_job["id"])
         yield
         executor.shutdown(wait=False, cancel_futures=True)
+        imagery.close()
 
     app = FastAPI(
         title="FireWatch API",
@@ -133,6 +143,20 @@ def create_app(
     app.state.settings = settings
     app.state.store = store
     app.state.executor = executor
+    app.state.imagery = imagery
+
+    @app.exception_handler(ImageryError)
+    async def imagery_error(_: Request, exc: ImageryError) -> JSONResponse:
+        headers = None
+        if exc.status == 429:
+            headers = {
+                "Retry-After": "60" if exc.code == "IMAGERY_RATE_LIMITED" else "2"
+            }
+        return JSONResponse(
+            status_code=exc.status,
+            content={"error": {"code": exc.code, "message": exc.message}},
+            headers=headers,
+        )
 
     @app.exception_handler(HTTPException)
     async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
@@ -478,6 +502,29 @@ def create_app(
     @app.get("/v1/models")
     async def get_models(_: None = Depends(authorize)) -> dict[str, Any]:
         return models()
+
+    @app.get("/v1/client-config")
+    async def client_config(response: Response) -> dict[str, Any]:
+        response.headers["Cache-Control"] = "no-store"
+        return imagery.client_config()
+
+    @app.post("/v1/imagery/search")
+    async def search_imagery(
+        request: ImagerySearchRequest,
+        response: Response,
+        _: None = Depends(authorize),
+    ) -> dict[str, Any]:
+        response.headers["Cache-Control"] = "no-store"
+        return await imagery.execute("search", request.model_dump(mode="json"))
+
+    @app.post("/v1/imagery/preview")
+    async def preview_imagery(
+        request: ImageryPreviewRequest,
+        response: Response,
+        _: None = Depends(authorize),
+    ) -> dict[str, Any]:
+        response.headers["Cache-Control"] = "no-store"
+        return await imagery.execute("preview", request.model_dump(mode="json"))
 
     @app.post("/v1/analyses", status_code=202)
     async def analyses(

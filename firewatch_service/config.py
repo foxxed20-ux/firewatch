@@ -21,13 +21,47 @@ class Settings:
     public_demo: bool = False
     registry_cache_seconds: int = 10
     download_root: Path | None = None
+    google_maps_api_key: str | None = None
+    google_cloud_project: str | None = None
+    earth_engine_enabled: bool = False
+    imagery_max_area_km2: int = 10_000
+    imagery_max_date_days: int = 366
+    imagery_timeout_seconds: int = 20
+    imagery_rate_limit_per_minute: int = 10
+    imagery_cache_seconds: int = 300
+    imagery_cache_entries: int = 128
+    imagery_max_concurrent: int = 2
 
     @classmethod
     def from_env(cls) -> "Settings":
         def path(name: str, default: str) -> Path:
             return Path(os.getenv(name, default)).expanduser().resolve()
 
+        def bounded(name: str, default: int, maximum: int) -> int:
+            return max(1, min(maximum, int(os.getenv(name, str(default)))))
+
         return cls(
+            google_maps_api_key=os.getenv("FIREWATCH_GOOGLE_MAPS_API_KEY", "").strip()
+            or None,
+            google_cloud_project=os.getenv("FIREWATCH_GOOGLE_CLOUD_PROJECT", "").strip()
+            or None,
+            earth_engine_enabled=os.getenv("FIREWATCH_EARTH_ENGINE_ENABLED", "false")
+            .strip()
+            .lower()
+            in {"1", "true", "yes"},
+            imagery_max_area_km2=bounded(
+                "FIREWATCH_IMAGERY_MAX_AREA_KM2", 10_000, 50_000
+            ),
+            imagery_max_date_days=bounded("FIREWATCH_IMAGERY_MAX_DATE_DAYS", 366, 366),
+            imagery_timeout_seconds=bounded(
+                "FIREWATCH_IMAGERY_TIMEOUT_SECONDS", 20, 60
+            ),
+            imagery_rate_limit_per_minute=bounded(
+                "FIREWATCH_IMAGERY_RATE_LIMIT_PER_MINUTE", 10, 60
+            ),
+            imagery_cache_seconds=bounded("FIREWATCH_IMAGERY_CACHE_SECONDS", 300, 300),
+            imagery_cache_entries=bounded("FIREWATCH_IMAGERY_CACHE_ENTRIES", 128, 1024),
+            imagery_max_concurrent=bounded("FIREWATCH_IMAGERY_MAX_CONCURRENT", 2, 4),
             download_root=path("FIREWATCH_DOWNLOAD_ROOT", "")
             if os.getenv("FIREWATCH_DOWNLOAD_ROOT")
             else None,

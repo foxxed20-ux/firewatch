@@ -11,7 +11,7 @@
     <title>FireWatch · Мониторинг пожаров</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="vendor/leaflet-1.9.4.css" />
-    <link rel="stylesheet" href="styles.css?v=73efe76fac04" />
+    <link rel="stylesheet" href="styles.css?v=6ae241b62f6a" />
   </head>
   <body>
     <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -253,6 +253,11 @@
                 /></label>
               </div>
               <p class="field-note">Включая последний день · время UTC</p>
+              <button class="imagery-open" id="open-imagery">
+                <svg><use href="#i-satellite" /></svg>
+                <span><b>Снимки по датам</b><small>Sentinel-2 · Google Earth Engine</small></span>
+                <svg><use href="#i-chevron" /></svg>
+              </button>
             </section>
             <section class="control-section">
               <div class="section-label">
@@ -331,8 +336,8 @@
             </div>
             <div class="basemap-switch" role="group" aria-label="Стиль карты">
               <button id="map-dark" class="active" aria-pressed="true">
-                Тёмная</button
-              ><button id="map-light" aria-pressed="false">Светлая</button>
+                Спутник</button
+              ><button id="map-light" aria-pressed="false">Карта</button>
             </div>
           </div>
           <div class="map-tools">
@@ -366,6 +371,12 @@
           </div>
           <div class="map-notice" id="map-notice" hidden>
             Подложка недоступна. Контуры и выбор области продолжают работать.
+          </div>
+          <div class="imagery-active" id="imagery-active" hidden>
+            <svg><use href="#i-satellite" /></svg>
+            <span><b id="imagery-active-title"></b><small id="imagery-active-detail"></small></span>
+            <button id="imagery-reopen" aria-label="Вернуться к снимкам">Снимки</button>
+            <button id="imagery-remove" aria-label="Убрать спутниковый снимок"><svg><use href="#i-close" /></svg></button>
           </div>
           <div class="map-onboarding" id="empty-map">
             <span class="empty-orbit"
@@ -422,6 +433,9 @@
               >Контуры появятся после анализа</span
             >
           </div>
+          <span class="map-provider-status" id="map-provider-status" role="status">Подключаем карту…</span>
+          <button class="map-fallback" id="map-fallback" hidden title="Переключиться на резервную карту, сохранив область и результаты">Резервная карта</button>
+          <span class="imagery-attribution" id="imagery-attribution" hidden></span>
         </section>
         <aside
           class="results-panel"
@@ -648,6 +662,7 @@
       <a class="text-button" href="/docs" target="_blank" rel="noopener"
         >Документация API ↗</a
       >
+      <div class="policy-links"><a href="/terms.html" target="_blank" rel="noopener">Условия использования</a><a href="/privacy.html" target="_blank" rel="noopener">Конфиденциальность</a></div>
     </dialog>
     <dialog id="report-dialog" class="app-dialog report-dialog">
       <div class="dialog-heading">
@@ -672,9 +687,33 @@
         </button>
       </div>
     </dialog>
+    <dialog id="imagery-dialog" class="app-dialog imagery-dialog" aria-labelledby="imagery-heading">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">АРХИВ СПУТНИКОВЫХ НАБЛЮДЕНИЙ</p><h2 id="imagery-heading">Территория во времени</h2></div>
+        <button class="icon-button" data-close-dialog aria-label="Закрыть спутниковые снимки"><svg><use href="#i-close" /></svg></button>
+      </div>
+      <p class="imagery-intro">Найдите реальные сцены Sentinel-2 и рассмотрите территорию в день съёмки. RGB · 10 м/пиксель · время UTC.</p>
+      <div class="imagery-area"><svg><use href="#i-target" /></svg><span id="imagery-aoi-label">Сначала выберите область на карте.</span><button class="text-button" id="imagery-select-area">Выбрать область</button></div>
+      <form id="imagery-form">
+        <div class="imagery-filters">
+          <label for="imagery-start">Начало периода<input type="date" id="imagery-start" required min="2017-03-28" /></label>
+          <label for="imagery-end">Конец периода<input type="date" id="imagery-end" required min="2017-03-28" /></label>
+          <label for="imagery-cloud">Облачность до<select id="imagery-cloud"><option value="10">10%</option><option value="30" selected>30%</option><option value="60">60%</option><option value="100">100%</option></select></label>
+          <button class="run-button imagery-search" id="imagery-search" type="submit"><svg><use href="#i-satellite" /></svg><span>Найти снимки</span></button>
+        </div>
+        <p class="field-note">До 366 дней и 10 000 км² за один поиск. Облачность указана для всей сцены.</p>
+      </form>
+      <div class="imagery-setup" id="imagery-setup" hidden><b>Подключаем Google Earth Engine</b><p>Поиск станет доступен после настройки Google Cloud на сервере. Доступные наборы для анализа уже можно использовать.</p></div>
+      <p class="imagery-status" id="imagery-status" role="status" aria-live="polite">Выберите период и нажмите «Найти снимки».</p>
+      <div class="imagery-results" id="imagery-results" aria-label="Найденные спутниковые сцены" aria-busy="false"></div>
+      <div class="imagery-footnote"><svg><use href="#i-info" /></svg><p>Дата относится к выбранной сцене Sentinel-2. Подложка Google Maps может быть снята в другое время. Для анализа пожаров используются наборы в левой панели.</p></div>
+      <a class="text-button" href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED" target="_blank" rel="noopener noreferrer">О данных Sentinel-2 ↗</a>
+    </dialog>
     <div class="toast" id="toast" role="status" hidden></div>
     <script src="vendor/leaflet-1.9.4.js"></script>
     <script src="core.js?v=a4d6a6bcbfcb"></script>
-    <script src="app.js?v=ceead2100ac1"></script>
+    <script src="map-provider.js?v=546dc798f4f3"></script>
+    <script src="app.js?v=931b0737df0e"></script>
+    <script src="imagery.js?v=e1916df50f55"></script>
   </body>
 </html>

@@ -1,0 +1,13 @@
+{
+  "model_bundle_id": "official-ensemble-v3",
+  "observed_at_utc": "2026-09-19T15:12:38.859361+00:00",
+  "source": "Organizer solution page observed through browser UI after submission",
+  "status": "completed",
+  "result_display": "0.7319",
+  "metric_scope": "Platform-reported result; component metrics and public/private split not displayed",
+  "submission_bytes": 5792006,
+  "submission_sha256": "d5ba983965a146a68195bae8a38d7e53ae21fdefdf3709aade977f4eccfb739c",
+  "matches_frozen_v3_submission": true,
+  "weights_changed": false,
+  "test_used_for_tuning": false
+}

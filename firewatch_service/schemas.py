@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from math import isfinite
 from typing import Annotated, Any, Literal
 
@@ -155,3 +155,46 @@ class APIError(StrictModel):
 
 class ErrorEnvelope(StrictModel):
     error: APIError
+
+
+class ImageryPreviewRequest(StrictModel):
+    scene_id: Annotated[str, Field(min_length=1, max_length=160)]
+    aoi: dict[str, Any]
+
+    @field_validator("aoi")
+    @classmethod
+    def valid_imagery_aoi(cls, value: dict[str, Any]) -> dict[str, Any]:
+        return GeometryAOI(geometry=value).geometry
+
+
+class ImagerySearchRequest(StrictModel):
+    aoi: dict[str, Any]
+    date_start: date
+    date_end: date
+    cloud_max: Annotated[float, Field(ge=0, le=100, allow_inf_nan=False)] = 30
+    limit: Annotated[int, Field(ge=1, le=20, strict=True)] = 10
+
+    @field_validator("aoi")
+    @classmethod
+    def valid_imagery_aoi(cls, value: dict[str, Any]) -> dict[str, Any]:
+        return GeometryAOI(geometry=value).geometry
+
+    @field_validator("date_start", "date_end", mode="before")
+    @classmethod
+    def calendar_date_only(cls, value: Any) -> Any:
+        # Do not accept epoch timestamps, datetimes, or implicit timezone shifts.
+        if not isinstance(value, str) or len(value) != 10:
+            raise ValueError("imagery dates must use YYYY-MM-DD")
+        try:
+            parsed = date.fromisoformat(value)
+        except ValueError:
+            raise ValueError("imagery dates must use YYYY-MM-DD") from None
+        if parsed.isoformat() != value or parsed == date.max:
+            raise ValueError("imagery dates must use YYYY-MM-DD before 9999-12-31")
+        return value
+
+    @model_validator(mode="after")
+    def ordered_dates(self) -> "ImagerySearchRequest":
+        if self.date_start > self.date_end:
+            raise ValueError("date_start must not follow date_end")
+        return self

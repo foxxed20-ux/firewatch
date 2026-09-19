@@ -1,6 +1,6 @@
 # FireWatch: архитектура и инструкции взаимодействия с моделями через API
 
-Версия документа: **1.1, 19.09.2026**. Версия HTTP API: **v1**.
+Версия документа: **1.2, 19.09.2026**. Версия HTTP API: **v1**.
 
 **Назначение:** архитектура взаимодействия с моделями AF/BS и инструкция для разработчика API-клиента. Требования сверены с тремя PDF пользователя, HTTP-контракты — с текущими `firewatch_service/api.py`, `schemas.py`, `catalog.py`, `jobs.py` и `processing.py`; модельный интерфейс — с `competition/service_bridge.py` и `data.py`. Команды установки и развёртывания находятся в [README_SERVICE.md](README_SERVICE.md). Примеры результатов ниже иллюстрируют структуру, а не измеренное качество модели. Начало интеграции — раздел 8.
 
@@ -205,9 +205,9 @@ Bundle публикуется как неизменяемый каталог с 
 
 ```json
 {
-  "dataset_id": "competition-test-v1",
+  "dataset_id": "demo-scenes-v1",
   "model_bundle_id": "competition-v1",
-  "chip_ids": ["AF_te_000001", "BS_te_000001"]
+  "chip_ids": ["AF_demo_000001", "BS_demo_000001"]
 }
 ```
 
@@ -306,23 +306,23 @@ HTTP 200 после завершения. Сокращённый пример д
   "model_bundle_id": "competition-v1",
   "items": [
     {
-      "chip_id": "AF_te_000001",
+      "chip_id": "AF_demo_000001",
       "task": "af",
       "height": 256,
       "width": 256,
-      "georeferenced": false,
+      "georeferenced": true,
       "classes": [0, 1],
-      "mask_url": "/v1/jobs/job_002/artifacts/mask_AF_te_000001",
+      "mask_url": "/v1/jobs/job_002/artifacts/mask_AF_demo_000001",
       "rle": [{"class_id": 1, "rle": ""}]
     },
     {
-      "chip_id": "BS_te_000001",
+      "chip_id": "BS_demo_000001",
       "task": "bs",
       "height": 512,
       "width": 512,
-      "georeferenced": false,
+      "georeferenced": true,
       "classes": [0, 1, 2, 3],
-      "mask_url": "/v1/jobs/job_002/artifacts/mask_BS_te_000001",
+      "mask_url": "/v1/jobs/job_002/artifacts/mask_BS_demo_000001",
       "rle": [
         {"class_id": 1, "rle": ""},
         {"class_id": 2, "rle": ""},
@@ -432,7 +432,7 @@ TP/FP/FN суммируются по всем чипам до вычислени
 2. Для карты отправить `/v1/analyses`; для масок зарегистрированных чипов — `/v1/predictions`. Не отправлять изображения в текстовом prompt и не передавать пути машины клиента.
 3. Сохранить `Idempotency-Key` до первого POST. При неясном результате сети повторять с тем же ключом.
 4. Получить `job_id`; опрашивать `status_url` с учётом `Retry-After` и ограничением общего времени ожидания.
-5. При failed прочитать `error`. При succeeded получить `result_url`, проверить `data_status` и предупреждения, скачать нужные артефакты.
+5. При failed прочитать `error`. При succeeded получить `result_url` и проверить предупреждения. Для анализа территории проверить `data_status`, `modules` и `quality`; для предсказания чипов — `items` и `artifacts` (поля `data_status` у этого результата нет). Скачать нужные артефакты.
 6. Для отчёта использовать числа API вместе с покрытием и датами. `no_data` не интерпретировать как «пожаров нет».
 
 ### Рабочий пример Python

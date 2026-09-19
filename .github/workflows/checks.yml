@@ -61,5 +61,7 @@ jobs:
         run: |
           node --check web/core.js
           node --check web/app.js
+          node --check web/map-provider.js
+          node --check web/imagery.js
       - name: Run frontend contracts
-        run: node --test tests/frontend/core.test.cjs
+        run: node --test tests/frontend/core.test.cjs tests/frontend/map-provider.test.cjs tests/frontend/imagery.test.cjs tests/frontend/map-contract.test.cjs

@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "archive": "dist/FireWatch-models-ensemble-v3-licensed.zip",
+  "bytes": 17820328,
+  "sha256": "dc34115c29b8dd6bb119c9fb2367d2f07478a8fb570f11190ad0d554b0f58854",
+  "files": 127,
+  "historical_payload_files_unchanged": 124,
+  "additions": [
+    "LICENSE",
+    "NOTICE"
+  ],
+  "notice_files_match_workspace": true,
+  "safe_member_paths": true,
+  "crc_and_manifest_sha_verified": true,
+  "base_archive_sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247"
+}

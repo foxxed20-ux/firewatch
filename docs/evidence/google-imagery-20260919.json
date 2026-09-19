@@ -1,0 +1,229 @@
+{
+  "scope": "Frozen Google imagery source integration; local tests and real Earth Engine through local API/UI. Not a production activation receipt.",
+  "source_verification": "All source sizes and SHA-256 matched the independently checked candidate snapshots.",
+  "candidates": {
+    "frontend": {
+      "candidate_digest": "015ebc65fe7a07165c4cdbef96619cc3add238a2ddde0f31979e7fed260d5dcf",
+      "source_files": [
+        {
+          "bytes": 26018,
+          "path": "firewatch_service/api.py",
+          "sha256": "ab42e86a9bcfd1c75a05c703466b66de61d7c67ce9056bcd42884a876769cdfe"
+        },
+        {
+          "bytes": 3982,
+          "path": "firewatch_service/config.py",
+          "sha256": "d61346603d8e283b640439b90361e2cf10810f140fdeb4ae5a171ab8e2718a63"
+        },
+        {
+          "bytes": 7076,
+          "path": "firewatch_service/imagery.py",
+          "sha256": "86ab5fb9751a3574b4f66b903a38a0fa1914b81ce88b5182fca344f0c1c6124b"
+        },
+        {
+          "bytes": 15528,
+          "path": "firewatch_service/imagery_provider.py",
+          "sha256": "a5c91a76eaebbb2d244ac01dc116e2b36ee8485492f8481165fc04aa57e8d21b"
+        },
+        {
+          "bytes": 6896,
+          "path": "firewatch_service/schemas.py",
+          "sha256": "f99fd1a917e6b90c7a2156c4fc55497607b8b2559805e006302b2f7a1504449c"
+        },
+        {
+          "bytes": 2210,
+          "path": "tests/frontend/core.test.cjs",
+          "sha256": "10f3303ca0df9e39f1d7d310e8a3e6d18a1680a97f47419157e3ba78cfd33a56"
+        },
+        {
+          "bytes": 12596,
+          "path": "tests/frontend/fixture_server.py",
+          "sha256": "96d23aae3e9e81fbc445bb2dc737b50843e3b983218410418f51ebf95929409e"
+        },
+        {
+          "bytes": 1796,
+          "path": "tests/frontend/imagery.test.cjs",
+          "sha256": "7cb4b0f06aad10d6bd4e3faea46fb4d455edfd63322eb46d2da84d7b7d3e82d1"
+        },
+        {
+          "bytes": 4232,
+          "path": "tests/frontend/imagery_fixture_server.py",
+          "sha256": "324a6c0b16bbe547df163da14329a691acd68bccc3fdd08ca26b1ff15c7d3ca8"
+        },
+        {
+          "bytes": 8922,
+          "path": "tests/frontend/map-contract.test.cjs",
+          "sha256": "3b1cfa2e842ee4f5c876813fc215fc968ea5e9dc25fb869a3430389cdb66582d"
+        },
+        {
+          "bytes": 1944,
+          "path": "tests/frontend/map-provider.test.cjs",
+          "sha256": "d0f91f50d6efac02abe7d39e3181cd5c7194277ee7a7bd1497a3611368a25dfe"
+        },
+        {
+          "bytes": 63483,
+          "path": "web/app.js",
+          "sha256": "931b0737df0e72090b2f8a26c79488708959cd04cfcd4a9bb66497973be13b6d"
+        },
+        {
+          "bytes": 10914,
+          "path": "web/core.js",
+          "sha256": "a4d6a6bcbfcbd564fcd71be6582493efddeccee58a40e29833147e7adcf02fae"
+        },
+        {
+          "bytes": 14426,
+          "path": "web/imagery.js",
+          "sha256": "e1916df50f552eb742ff656a2cbbdb52deb7220ab0490bfe2a59add88cf7948e"
+        },
+        {
+          "bytes": 34048,
+          "path": "web/index.html",
+          "sha256": "f653279f782218d487d3891c0749495cb877104630546847b986a6a1e47348d5"
+        },
+        {
+          "bytes": 20217,
+          "path": "web/map-provider.js",
+          "sha256": "546dc798f4f3264c6fda1c2ae5681e2a056731c3abf4ad3bdf6299c8310eb6ad"
+        },
+        {
+          "bytes": 3524,
+          "path": "web/privacy.html",
+          "sha256": "78c9efd0509e130f5bac20cdefe8e20f091719f7da42b0ceee491bbc337e42a2"
+        },
+        {
+          "bytes": 50658,
+          "path": "web/styles.css",
+          "sha256": "6ae241b62f6aa24834bce5472ae6c3780537b516a9898b38d778d8bdb3c47429"
+        },
+        {
+          "bytes": 3042,
+          "path": "web/terms.html",
+          "sha256": "6ea25d01a15a5a12bdc84b93eeb19d228af17cb223a5424c9df97f4533dd5043"
+        }
+      ]
+    },
+    "backend": {
+      "candidate_digest": "ca8f53b4838ad4c39c476ed2e20adcc764bc369d384d628bb357200ea38c6916",
+      "source_files": [
+        {
+          "bytes": 1157,
+          "path": "deploy/service.env.example",
+          "sha256": "46bb4e03b655d3ec584435825124ae1f64f86115e24b8d5abcbeff97cee1af82"
+        },
+        {
+          "bytes": 21255,
+          "path": "docs/GOOGLE_CLOUD_SETUP.md",
+          "sha256": "1cbc5eef39d1033578f1468c4ea99bd88893c81f221c9c3c53b7a9f363d831b4"
+        },
+        {
+          "bytes": 26018,
+          "path": "firewatch_service/api.py",
+          "sha256": "ab42e86a9bcfd1c75a05c703466b66de61d7c67ce9056bcd42884a876769cdfe"
+        },
+        {
+          "bytes": 5788,
+          "path": "firewatch_service/catalog.py",
+          "sha256": "ab408ef1a9eea76c964c13d5f54085a0553c8aa85b31918ef60dae8d8aaff8d0"
+        },
+        {
+          "bytes": 3982,
+          "path": "firewatch_service/config.py",
+          "sha256": "d61346603d8e283b640439b90361e2cf10810f140fdeb4ae5a171ab8e2718a63"
+        },
+        {
+          "bytes": 7076,
+          "path": "firewatch_service/imagery.py",
+          "sha256": "86ab5fb9751a3574b4f66b903a38a0fa1914b81ce88b5182fca344f0c1c6124b"
+        },
+        {
+          "bytes": 15528,
+          "path": "firewatch_service/imagery_provider.py",
+          "sha256": "a5c91a76eaebbb2d244ac01dc116e2b36ee8485492f8481165fc04aa57e8d21b"
+        },
+        {
+          "bytes": 8738,
+          "path": "firewatch_service/jobs.py",
+          "sha256": "b5c2bfeda42bb3b173a8690fa951585dc446c9ba7645080fa02601e74fa4b75b"
+        },
+        {
+          "bytes": 28371,
+          "path": "firewatch_service/processing.py",
+          "sha256": "0bdb7dba407cdcf19aa68e539fa979616d8424fcac1db1e2c4d9e612de07107a"
+        },
+        {
+          "bytes": 6896,
+          "path": "firewatch_service/schemas.py",
+          "sha256": "f99fd1a917e6b90c7a2156c4fc55497607b8b2559805e006302b2f7a1504449c"
+        },
+        {
+          "bytes": 172,
+          "path": "requirements-service.txt",
+          "sha256": "16daa38274458de4f83f7a62ba6d1e0a47c28f008d34039fbf97d05cf606801e"
+        },
+        {
+          "bytes": 17540,
+          "path": "tests/service/test_api.py",
+          "sha256": "e0335603d06b4225c7d1c2e757a67b264a07f3e68c9cada9322f23964ad3509e"
+        },
+        {
+          "bytes": 13705,
+          "path": "tests/service/test_geo.py",
+          "sha256": "8f19baef1c6aee27bb02655fa1347285ede3811269c824b365870501c98496e6"
+        },
+        {
+          "bytes": 10833,
+          "path": "tests/service/test_imagery_api.py",
+          "sha256": "6428a025b63d50e11c4e850b717630d7b00ad4d5c1acff4dbb42c049ba6bbe84"
+        },
+        {
+          "bytes": 10663,
+          "path": "tests/service/test_imagery_provider.py",
+          "sha256": "c8ca5c2aae7535c6b905816670da803b9867f99a1f1fa4bfd8d851dff3929b65"
+        },
+        {
+          "bytes": 6111,
+          "path": "tests/service/test_imagery_sdk.py",
+          "sha256": "5b11b176e18b53d3843ea5946026cb3e7bfc0d6ec2f967efbc7887f4c3f82150"
+        },
+        {
+          "bytes": 1628,
+          "path": "tests/service/test_publish_download.py",
+          "sha256": "8064e5c5b025e4e808d3b63eeb9e6444ae9022d979a618b5020c500256a5357c"
+        },
+        {
+          "bytes": 4056,
+          "path": "tests/service/test_release.py",
+          "sha256": "f537f7e5e3a68c3222169c80bfe9b40c11f2d13fe0dd682b5fab1a7bfc824160"
+        }
+      ]
+    }
+  },
+  "native_checks": {
+    "frontend": {
+      "status": "all_passed",
+      "required_checks": 5,
+      "tests_passed": 17
+    },
+    "backend": {
+      "status": "all_passed",
+      "required_checks": 4,
+      "tests_passed": 69
+    }
+  },
+  "live_earth_engine_local": {
+    "search_http_status": 200,
+    "api_scene_count": 5,
+    "preview_http_status": 200,
+    "tile_http_status": 200,
+    "tile_content_type": "image/jpeg",
+    "desktop_viewport": "1280x720",
+    "mobile_viewport": "360x640",
+    "scene_switch_verified": true
+  },
+  "google_maps_production_origin": "unverified",
+  "new_integration_production_deployed": false,
+  "metadata_browser_download": "unverified",
+  "model_bundle": "official-ensemble-v3",
+  "sentinel_rgb_preview_is_model_input": false,
+  "credentials_included": false
+}

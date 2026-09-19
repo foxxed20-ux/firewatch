@@ -1,5 +1,5 @@
 /* FireWatch working surface. Data and areas always come from the service. */
-(() => {
+(async () => {
   "use strict";
   const $ = (id) => document.getElementById(id);
   const C = globalThis.FireWatchCore;
@@ -81,7 +81,7 @@
     toastTimer: null,
     fetching: false,
   };
-  if (!globalThis.L || !C) {
+  if (!globalThis.L || !C || !globalThis.FireWatchMapProvider) {
     $("error-box").hidden = false;
     $("error-message").textContent =
       "Не удалось загрузить компоненты интерфейса. Обновите страницу.";
@@ -98,29 +98,43 @@
   leaveJob.hidden = true;
   leaveJob.textContent = "Вернуться к параметрам";
   $("error-box").append(leaveJob);
-  const map = L.map("map", {
+  const mapContextPromise = globalThis.FireWatchMapProvider.create("map", {
     zoomControl: false,
     doubleClickZoom: false,
     preferCanvas: true,
     minZoom: 3,
     maxZoom: 18,
     worldCopyJump: true,
-  }).setView([49.5, 40], 6);
-  const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
-    crossOrigin: true,
-  }).addTo(map);
-  tiles.on("tileerror", () => {
+    center: [49.5, 40], zoom: 6,
+  });
+  globalThis.FireWatchMapReady = mapContextPromise;
+  const mapContext = await mapContextPromise;
+  const L = mapContext.L, map = mapContext.map;
+  const mapProvider = mapContext;
+  // apiHeaders is declared below; defer evaluation until imagery actually sends a request.
+  mapContext.apiHeaders = (extra) => apiHeaders(extra);
+  mapContext.getAOI = () => state.aoi?.geometry || (state.aoi?.bbox ? C.bboxGeometry(state.aoi.bbox) : null);
+  const setMapProviderStatus = (text) => {
+    const node = $("map-provider-status");
+    if (node) node.textContent = text;
+  };
+  function updateMapProvider() {
+    const google = mapProvider.provider === "google";
+    $("map").dataset.provider = mapProvider.provider;
+    $("map-dark").textContent = google ? "Спутник" : "Тёмная";
+    $("map-light").textContent = google ? "Карта" : "Светлая";
+    $("map-fallback").hidden = !google;
+    $("map-notice").hidden = !mapProvider.config?.maps?.error;
+    if (mapProvider.config?.maps?.error) $("map-notice").textContent = "Используется резервная карта. Область и результаты сохранены.";
+    setMapProviderStatus(google ? "Подложка: Google Maps" : mapProvider.config?.maps?.error ? "OpenStreetMap · резервная карта" : "OpenStreetMap · Google Maps ещё не подключён");
+  }
+  updateMapProvider();
+  $("map-fallback").addEventListener("click", () => mapProvider.useFallback());
+  globalThis.addEventListener("firewatch:map-status", updateMapProvider);
+  globalThis.addEventListener("firewatch:base-tile-error", () => {
+    $("map-notice").textContent = "Подложка недоступна. Контуры и выбор области продолжают работать.";
     $("map-notice").hidden = false;
   });
-  tiles.on("tileload", () => {
-    $("map-notice").hidden = true;
-  });
-  L.control
-    .scale({ imperial: false, position: "bottomleft", maxWidth: 95 })
-    .addTo(map);
   const aoiStyle = {
     color: "#ff965c",
     weight: 2,
@@ -312,6 +326,7 @@
       kind === "bbox"
         ? { bbox: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] }
         : { geometry };
+    globalThis.dispatchEvent(new CustomEvent("firewatch:aoi-changed", { detail: { geometry } }));
     ["bbox-w", "bbox-s", "bbox-e", "bbox-n"].forEach(
       (id, i) =>
         ($(id).value = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()][
@@ -334,6 +349,7 @@
     if (state.drawLayer) map.removeLayer(state.drawLayer);
     state.drawLayer = null;
     state.aoi = null;
+    globalThis.dispatchEvent(new CustomEvent("firewatch:aoi-changed", { detail: { geometry: null } }));
     ["bbox-w", "bbox-s", "bbox-e", "bbox-n"].forEach(
       (id) => ($(id).value = ""),
     );
@@ -1474,6 +1490,7 @@
   });
   ["dark", "light"].forEach((theme) =>
     bind(`map-${theme}`, () => {
+      mapProvider?.setTheme?.(theme === "dark" ? "satellite" : "roadmap");
       $("map").classList.toggle("dark-map", theme === "dark");
       $("map-section").classList.toggle("light-theme", theme === "light");
       ["dark", "light"].forEach((t) => {
@@ -1531,4 +1548,8 @@
       }
     }
   });
-})();
+})().catch((error) => {
+  document.getElementById("error-box").hidden = false;
+  document.getElementById("error-message").textContent = "Не удалось запустить карту. Обновите страницу.";
+  console.error("FireWatch initialization failed", error);
+});

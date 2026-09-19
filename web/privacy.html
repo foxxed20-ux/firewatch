@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Конфиденциальность · FireWatch</title>
+    <style>
+      :root { color-scheme: dark; --ink:#edf2ee; --muted:#aebbb2; --line:#304039; --paper:#122018; --accent:#ff965c; }
+      * { box-sizing:border-box } body { margin:0; min-height:100vh; background:#0b120e; color:var(--ink); font:16px/1.6 Inter,system-ui,sans-serif; }
+      main { width:min(760px,calc(100% - 32px)); margin:0 auto; padding:48px 0 72px; } a { color:#ffb487 } a:hover { color:#ffd0ad } .eyebrow { color:var(--accent); font-size:.78rem; letter-spacing:.12em; font-weight:700 } h1 { line-height:1.15; margin:.25rem 0 1rem } h2 { margin:2rem 0 .5rem; font-size:1.15rem } p,li { color:var(--muted) } .card { padding:20px 22px; background:var(--paper); border:1px solid var(--line); border-radius:14px; } .back { display:inline-block; margin-bottom:2rem; text-decoration:none; } footer { margin-top:2rem; color:var(--muted); font-size:.9rem; border-top:1px solid var(--line); padding-top:1rem; }
+    </style>
+  </head>
+  <body><main>
+    <a class="back" href="/">← Вернуться к карте FireWatch</a>
+    <p class="eyebrow">FIREWATCH · ДЕМО-СЕРВИС</p><h1>Конфиденциальность</h1>
+    <h2>Карта Google</h2>
+    <p>Если настроена Google Maps JavaScript API, карта загружается браузером напрямую у Google. При этом Google получает сведения о посещении, включая IP-адрес и область карты. Обработка регулируется <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Политикой конфиденциальности Google</a> и <a href="https://cloud.google.com/maps-platform/terms" target="_blank" rel="noopener">Условиями Google Maps Platform</a>.</p>
+    <p>Если Google Maps недоступен или не настроен, интерфейс показывает подложку OpenStreetMap. Для неё действует <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">политика конфиденциальности OpenStreetMap Foundation</a>.</p>
+    <h2>Поиск спутниковых снимков</h2>
+    <p>При поиске Sentinel-2 выбранные контур области и даты отправляются на сервер FireWatch, а затем в Google Earth Engine для выполнения поиска. Предпросмотр снимка использует изображения и атрибуцию Google Earth Engine и Copernicus, которые показываются рядом с картой.</p>
+    <h2>Данные в браузере и на сервере</h2>
+    <p>История анализов сохраняется в этом браузере. Сервисный токен используется только в текущей сессии страницы. Созданные задания и их артефакты сохраняются сервером FireWatch, чтобы их можно было получить по идентификатору задания.</p>
+    <footer>Для условий использования интерфейса см. <a href="/terms.html">Условия</a>.</footer>
+  </main></body>
+</html>

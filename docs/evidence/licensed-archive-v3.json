@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "bundle_id": "official-ensemble-v3",
+  "edition": "v3-licensed",
+  "archive": "dist/FireWatch-models-ensemble-v3-licensed.zip",
+  "bytes": 17820328,
+  "sha256": "dc34115c29b8dd6bb119c9fb2367d2f07478a8fb570f11190ad0d554b0f58854",
+  "files": 127,
+  "manifest_payload_files": 126,
+  "base_archive_sha256": "45317f541bb60b77d67b5ca4729c939bc34446e08097c1b39b1a0f4ce7e96247",
+  "base_payload_files_unchanged": 124,
+  "added_files": {
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "NOTICE": "0a3cb7b40654d8ccf641c16b73e625e24639176d9c1989cc15d99da669bd7cd6"
+  },
+  "updated_files": [
+    "DELIVERY_MANIFEST.json"
+  ],
+  "crc_verified": true,
+  "all_manifest_hashes_verified": true,
+  "historical_archive_unchanged": true,
+  "runtime_and_models_unchanged": true,
+  "scope": "Legal-notice packaging update; existing runtime proofs apply to byte-identical code and weights. No new model-quality claim."
+}
