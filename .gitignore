@@ -29,6 +29,8 @@ Thumbs.db
 .codex-finalizer/
 .chart-data-*/
 node_modules/
+tmp/
+dist/
 
 # Data, learned weights and generated predictions are release assets, not source
 data/
