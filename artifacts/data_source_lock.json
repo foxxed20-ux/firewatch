@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "competition_data_source_provenance_lock",
+  "observed_at_utc": "2026-09-19T13:20:01.522820Z",
+  "timestamp_semantics": {
+    "observed_at_utc": "time this lock was generated",
+    "filesystem_mtime_utc": "filesystem metadata only; not an acquisition timestamp",
+    "acquisition_time": "unknown; not asserted"
+  },
+  "source": {
+    "url_without_query_fragment_or_credentials": "https://disk.yandex.ru/d/-rpmevTflbXZQg",
+    "sensitive_url_components_removed": false
+  },
+  "archives": {
+    "train": {
+      "name": "fire-train-renamed.tar",
+      "size_bytes": 2305976320,
+      "sha256": "9cc2d532312dd91d24beb8c6abcfdddac0cff6ca095501be28d81f751a8f159a",
+      "filesystem_mtime_utc": "2026-09-19T12:14:31.740353Z"
+    },
+    "test": {
+      "name": "fire-test-renamed.tar",
+      "size_bytes": 920483840,
+      "sha256": "0431f8ae3af3a266a99074f87ca4a4caf5b6ea2e3645048a905ccac10c51674f",
+      "filesystem_mtime_utc": "2026-09-19T12:15:43.609743Z"
+    }
+  },
+  "supporting_artifacts": {
+    "schema": {
+      "name": "train_schema.json",
+      "size_bytes": 6110,
+      "sha256": "162a261bc4ee60e02213b6fa64f4731b0a08e7845857643d859abf1ea240fffc",
+      "filesystem_mtime_utc": "2026-09-19T12:14:51.699128Z"
+    },
+    "inspection": {
+      "name": "data_inspection.json",
+      "size_bytes": 6179,
+      "sha256": "7426a1915557ad9b4c72b2c0c87dd6be11da757423e20a5ef823117a1c31df5a",
+      "filesystem_mtime_utc": "2026-09-19T12:26:24.005707Z"
+    },
+    "split": {
+      "name": "split.json",
+      "size_bytes": 17133,
+      "sha256": "29a434ee0b2aff7b31cef766cd78bd452fd0241ad5bad3b8647b84ccb39a8f42",
+      "filesystem_mtime_utc": "2026-09-19T12:26:24.004707Z"
+    }
+  }
+}

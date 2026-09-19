@@ -1,0 +1,42 @@
+{
+  "scope": "Training, features and metrics AST identity; not inference-source identity or retraining",
+  "source_archive_sha256": "a5cab9e409aaba69543fecb692e20a16d1f69e2ba983198fea7e090e2054eb03",
+  "modules": {
+    "competition/data.py": {
+      "training_source_sha256": "d0d503df98411108f6becda567d547135c94a7e05581007c89937c16734d046e",
+      "delivery_source_sha256": "7ce4f65d243952b2b94d2e365b89487e49fbaeffa74c4c7f10f48378af5dc8da",
+      "ast_equal": true
+    },
+    "competition/models.py": {
+      "training_source_sha256": "2be69b85b4299a09b4a35c6d31fc94b55d8581aa4a07bce0bfc0fccf4e2960ce",
+      "delivery_source_sha256": "8ae6d0d3ff8b27c95e47bc9fe52ad1f73734bfb3ab1d65bc83f3d7487c81537a",
+      "ast_equal": true
+    },
+    "competition/prepare.py": {
+      "training_source_sha256": "38b5c369435172fd5026d310f9a9d86d3c6c8d628cbba3d5b68ff0e7a207e0d2",
+      "delivery_source_sha256": "4bd87f2b68cf5dc18792ea70b0de24c3ef09908bfa85dd7d3ec5f8d52d004771",
+      "ast_equal": true
+    },
+    "competition/train.py": {
+      "training_source_sha256": "0b1bab6f027df80beb006effced95405ca93bf4c31be92ea325d54e3703fc883",
+      "delivery_source_sha256": "fed67b15ca19dfc2edcf53cd6468be607b0f55c14e24d5e4db47b0b113702afa",
+      "ast_equal": true
+    },
+    "competition/tree.py": {
+      "training_source_sha256": "824ab3d149efe406f725fcad21f02a6a70769b2864d8c8f40da4b946a7f06a32",
+      "delivery_source_sha256": "130db3ac17dc611075e5df0372a8c8e815e8ae29d440b86875ffd19151007336",
+      "ast_equal": true
+    },
+    "competition/metrics.py": {
+      "training_source_sha256": "174e811324f1989c69d4e1139d2135a5abf0c08b753d0245e7b28d95fc33023d",
+      "delivery_source_sha256": "174e811324f1989c69d4e1139d2135a5abf0c08b753d0245e7b28d95fc33023d",
+      "ast_equal": true
+    },
+    "train.py": {
+      "training_source_sha256": "066d35c0f62c0721db19f4164fd464fa3607b9cb9eaac33bcce07030cd0393a0",
+      "delivery_source_sha256": "066d35c0f62c0721db19f4164fd464fa3607b9cb9eaac33bcce07030cd0393a0",
+      "ast_equal": true
+    }
+  },
+  "all_ast_equal": true
+}
