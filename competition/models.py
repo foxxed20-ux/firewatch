@@ -1,4 +1,5 @@
 """Small, dependency-free PyTorch segmentation models for FireWatch."""
+
 from __future__ import annotations
 
 import torch
@@ -40,7 +41,10 @@ class SmallResUNet(nn.Module):
     This intentionally has no pretrained encoder: competition chips have a
     sensor-specific channel layout and external image pretraining is unsafe.
     """
-    def __init__(self, in_channels: int, out_channels: int, base_channels: int = 24) -> None:
+
+    def __init__(
+        self, in_channels: int, out_channels: int, base_channels: int = 24
+    ) -> None:
         super().__init__()
         if in_channels < 1 or out_channels < 1:
             raise ValueError("in_channels and out_channels must be positive")
@@ -57,7 +61,15 @@ class SmallResUNet(nn.Module):
 
     @staticmethod
     def _up(x: torch.Tensor, skip: torch.Tensor) -> torch.Tensor:
-        return torch.cat([F.interpolate(x, size=skip.shape[-2:], mode="bilinear", align_corners=False), skip], dim=1)
+        return torch.cat(
+            [
+                F.interpolate(
+                    x, size=skip.shape[-2:], mode="bilinear", align_corners=False
+                ),
+                skip,
+            ],
+            dim=1,
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         e0 = self.stem(x)

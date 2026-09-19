@@ -51,9 +51,9 @@ def encode_rle(mask: ArrayLike) -> str:
     """Encode a binary 2D mask as one-based, row-major (C-order) RLE."""
 
     flat = _binary_mask(mask).reshape(-1, order="C")
-    padded = np.concatenate(
-        (np.array([False]), flat, np.array([False]))
-    ).astype(np.int8, copy=False)
+    padded = np.concatenate((np.array([False]), flat, np.array([False]))).astype(
+        np.int8, copy=False
+    )
     transitions = np.diff(padded)
     starts = np.flatnonzero(transitions == 1) + 1
     ends = np.flatnonzero(transitions == -1) + 1
