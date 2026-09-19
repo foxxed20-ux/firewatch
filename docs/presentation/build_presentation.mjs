@@ -483,12 +483,18 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
     series: [
       {
         name: "dNBR comparator",
-        values: [metrics.dnbr_burn_iou, metrics.dnbr_severity_miou],
+        values: [
+          Number(metrics.dnbr_burn_iou.toFixed(6)),
+          Number(metrics.dnbr_severity_miou.toFixed(6)),
+        ],
         fill: "#78969A",
       },
       {
-        name: "Tuned LightGBM",
-        values: [metrics.bs_burn_iou, metrics.bs_severity_miou],
+        name: metrics.bs_chart_label,
+        values: [
+          Number(metrics.bs_burn_iou.toFixed(6)),
+          Number(metrics.bs_severity_miou.toFixed(6)),
+        ],
         fill: C.orange,
       },
     ],
@@ -517,21 +523,25 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   applyPresentationChartFont(chart, { fontFamily: font });
   box(
     s,
-    `Прирост BS: +${metrics.bs_burn_gain.toFixed(4)} IoU гари; +${metrics.bs_severity_gain.toFixed(4)} mIoU тяжести.`,
+    `V3 vs V2: +${metrics.v3_score_gain_over_v2.toFixed(4)} Score; BS vs dNBR: +${metrics.bs_burn_gain.toFixed(4)} IoU, +${metrics.bs_severity_gain.toFixed(4)} mIoU.`,
     710,
-    422,
+    410,
     400,
-    58,
-    { size: 20, color: C.cream, bold: true },
+    54,
+    { size: 18, color: C.cream, bold: true },
   );
-  box(s, metrics.smoke, 710, 512, 380, 32, {
-    size: 18,
+  box(s, `${metrics.v3_bootstrap_95}; ${metrics.v3_selection_note}.`, 710, 468, 390, 38, {
+    size: 14,
+    color: C.mint,
+  });
+  box(s, metrics.smoke, 710, 516, 390, 54, {
+    size: 16,
     color: C.mint,
     bold: true,
   });
   box(
     s,
-    "dNBR comparator не является официальным baseline. CPU replay v2 прошёл на 129 validation-чипах; результаты не оценивают закрытый test.",
+    "dNBR comparator не является официальным baseline. CSV validator: EXIT 0; результаты не оценивают закрытый test.",
     64,
     625,
     1090,
@@ -540,7 +550,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   );
   note(
     s,
-    "Источник: artifacts/ensemble-v2/selected_recipes.json; artifacts/tree-v1/tuned_recipes.json; artifacts/cnn-v1/af/validation_report.json; artifacts/ensemble-v2/demo_smoke/report.json. dNBR comparator: burnIoU 0.3638147045, mIoUsev 0.3542668560, пороги 0.1/0.2/0.4. CPU replay v2 на 129 validation-чипах: PASS. Это validation, не закрытый test Score.",
+    "V3 candidate: AF F1 0.9295086969789441; BS ensemble 25% CNN / 75% LightGBM, multipliers [1, 2.2, 2.2, 1.3]: burnIoU 0.586688701444679, mIoU severity 0.5883615062423446, Score 0.7071775413209715. V3 vs V2: +0.00446196389 Score; bootstrap 95% [−0.00139005, +0.01121531], интервал включает 0, результат условен на selected recipes. dNBR comparator: burnIoU 0.3638147045, mIoUsev 0.3542668560, пороги 0.1/0.2/0.4. Full V3 CLI: 269 чипов, 447 строк, 390.703092179 с на GPU T4/CUDA; CPU replay 129 (84 AF / 45 BS): Δ=0 во всех трёх checks. Independent CSV validator: EXIT 0, 447 data rows, exact order, canonical RLE и BS exclusivity; SHA-256 d5ba983965a146a68195bae8a38d7e53ae21fdefdf3709aade977f4eccfb739c. Это validation, не закрытый test Score.",
   );
 }
 
@@ -587,7 +597,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   });
   box(
     s,
-    "Реальный UI: official-ensemble-v2, BS_tr_000159, 938,5 га, покрытие 25,4%. Train/validation-демо, не закрытый test.",
+    "Реальный UI V3: official-ensemble-v3, BS_tr_000159, 1 037,3 га, покрытие 25,4%. Train/validation-демо, не закрытый test.",
     390,
     638,
     740,
@@ -605,7 +615,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   );
   note(
     s,
-    "Источник: docs/assets/firewatch-bs-demo.png, копия artifacts/frontend/public-bs-desktop.png. Проверенный публичный HTTPS capture: official-ensemble-v2, BS_tr_000159, 938,5 га, coverage 25,4%; severity 242,9 / 176,4 / 519,1 га. Public BS GeoJSON download: PASS. Демо на train/validation, не закрытый test. Также: README.md, «Демонстрация»; docs/architecture.md, «Запрос на анализ»; docs/evaluation.md.",
+    "Источник: docs/assets/firewatch-bs-demo.png, копия artifacts/frontend/v3-bs-desktop.png. Проверенный публичный HTTPS capture: release 20260919-ensemble-4, bundle official-ensemble-v3, BS_tr_000159, 1 037,3 га, coverage 25,4%, 1 171 полигон; severity 250,6 / 178,8 / 607,9 га. Browser BS и export: PASS. Демо на train/validation, не закрытый test. Также: README.md, «Демонстрация»; docs/architecture.md, «Запрос на анализ»; docs/evaluation.md.",
   );
 }
 
@@ -631,7 +641,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   }
   box(
     s,
-    "V2: CLI 447 строк за 540,3 с; CPU replay 129 validation-чипов: PASS. Это не организаторский speed score.",
+    "V3: CLI 447 строк за 390,7 с на T4/CUDA; CPU replay 129: Δ=0 во всех 3 checks. Это не организаторский speed score.",
     64,
     605,
     1070,
@@ -640,7 +650,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   );
   note(
     s,
-    "Источник: подтверждённый полный offline CLI-прогон v2 владельца model runtime: 269 чипов, 447 строк, 540,3043 с, сеть заблокирована. CPU replay всех 129 validation-чипов: PASS. Также: README.md, «Почему решение можно проверить» и «Проверки»; docs/evaluation.md, таблица «Что подтверждает каждый вид проверки». Время относится к среде команды, не к организаторскому speed score.",
+    "Источник: завершённый full V3 CLI владельца model runtime: 269 чипов, 447 строк, 390.703092179 с на GPU T4/CUDA. CPU replay 129 validation-чипов (84 AF / 45 BS): Δ=0 во всех трёх checks; обучение завершено. artifacts/ensemble-v3/evidence/submission_validation.json: EXIT 0, SHA-256 d5ba983965a146a68195bae8a38d7e53ae21fdefdf3709aade977f4eccfb739c; 447 data rows, exact order, canonical RLE, BS exclusivity. Также: README.md, «Почему решение можно проверить» и «Проверки»; docs/evaluation.md, таблица «Что подтверждает каждый вид проверки». Время относится к среде команды, не к организаторскому speed score.",
   );
 }
 
@@ -662,7 +672,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   miniLabel(s, "Осталось завершить", 652, 190, 380, C.coral);
   box(
     s,
-    "Сравнение BS-кандидатов\nИтоговая поставка",
+    "Итоговая поставка\nи GitVerse",
     652,
     225,
     410,
@@ -671,7 +681,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   );
   box(
     s,
-    "Публичный E2E, rollback и parity CPU Windows/Linux на 4 сценах: PASS.",
+    "V3 service: E2E 91 HTTP / 6 jobs; rollback и parity raw mask Windows/Linux: PASS.",
     652,
     360,
     410,
@@ -716,7 +726,7 @@ function metric(slide, value, label, x, y, w, accent = C.orange) {
   );
   note(
     s,
-    "Команда: 4_th_try. Источник: README.md, «Данные и границы применения»; docs/evaluation.md, «Готовность релизного кандидата»; CHANGELOG.md. Публичный E2E, rollback и parity CPU Windows/Linux на 4 сценах: PASS. Основной конкурсный репозиторий: https://gitverse.ru/hackrus.experts/kosmo-krasnoiarsk_4_th_try_106. Зеркало разработки: https://github.com/foxxed20-ux/firewatch.",
+    "Команда: 4_th_try. Источник: README.md, «Данные и границы применения»; docs/evaluation.md, «Готовность релизного кандидата»; CHANGELOG.md. V3 service: public E2E 91 HTTP checks / 6 jobs, browser BS/export, rollback V3→V2 на реальном BS159 и восстановление V3, parity raw mask CPU Windows/Linux на 4 сценах: PASS. Проверка hole polygon: 644 features, 616,281 га: PASS. Full V3 CLI 269/447 завершён за 390.703092179 с на GPU T4/CUDA; CPU replay 129: Δ=0 во всех трёх checks. artifacts/ensemble-v3/evidence/submission_validation.json: EXIT 0, 447 data rows, exact order, canonical RLE, BS exclusivity, SHA-256 d5ba983965a146a68195bae8a38d7e53ae21fdefdf3709aade977f4eccfb739c. Основной конкурсный репозиторий: https://gitverse.ru/hackrus.experts/kosmo-krasnoiarsk_4_th_try_106. Зеркало разработки: https://github.com/foxxed20-ux/firewatch.",
   );
 }
 

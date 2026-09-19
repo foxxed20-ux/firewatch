@@ -1,13 +1,17 @@
 {
   "scope": "Валидация на зафиксированном открытом train-разбиении. Не закрытый test",
   "af_f1": 0.92950869698,
-  "bs_burn_iou": 0.57675420823,
-  "bs_severity_miou": 0.58507853536,
-  "score": 0.7027155774,
-  "bundle": "v2 candidate: AF ensemble 25% CNN / 75% LightGBM; BS tuned LightGBM",
+  "bs_burn_iou": 0.586688701444679,
+  "bs_severity_miou": 0.5883615062423446,
+  "score": 0.7071775413209715,
+  "bundle": "v3 candidate: AF ensemble 25% CNN / 75% LightGBM; BS ensemble 25% CNN / 75% LightGBM, multipliers [1, 2.2, 2.2, 1.3]",
+  "bs_chart_label": "V3 BS ensemble",
   "dnbr_burn_iou": 0.3638147045,
   "dnbr_severity_miou": 0.354266856,
-  "bs_burn_gain": 0.21293950373,
-  "bs_severity_gain": 0.23081167936,
-  "smoke": "CPU offline smoke: 4 сцены, PASS"
+  "bs_burn_gain": 0.222873996944679,
+  "bs_severity_gain": 0.2340946502423446,
+  "v3_score_gain_over_v2": 0.00446196389,
+  "v3_bootstrap_95": "bootstrap 95%: [−0,0014; +0,0112]; интервал включает 0",
+  "v3_selection_note": "прирост условен на выбранных recipes",
+  "smoke": "V3: CLI 269 чипов / 447 строк — 390,7 с на T4/CUDA; CPU replay 129: Δ=0 во всех 3 checks"
 }

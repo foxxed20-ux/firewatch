@@ -34,13 +34,13 @@
 
 **[Открыть FireWatch](https://firewatch.151.247.25.189.nip.io/)** · [Swagger API](https://firewatch.151.247.25.189.nip.io/docs)
 
-**Статус: проверенный кандидат v2.** Публичный AF/BS-сервис, геоэкспорт, карта и откат прошли сквозную проверку. Полный автономный CLI сформировал 447 строк; дополнительные BS-модели продолжают сравниваться на validation.
+**Статус: конкурсная поставка v3.** Для обеих задач выбраны отдельные ансамбли CNN и LightGBM. Полный автономный CLI, CPU replay, публичный сервис, браузерный сценарий и откат проверены. Предыдущий v2 сохранён как резерв.
 
 Основной конкурсный репозиторий — [GitVerse](https://gitverse.ru/hackrus.experts/kosmo-krasnoiarsk_4_th_try_106). [Зеркало на GitHub](https://github.com/foxxed20-ux/firewatch) сохраняет ту же историю разработки.
 
 ![Карта FireWatch: реальные контуры гари, степени поражения и сводка площадей](docs/assets/firewatch-bs-demo.png)
 
-*Снимок публичного сервиса: `official-ensemble-v2`, сцена `BS_tr_000159` из открытого train/validation. 938,5 га гари в наблюдаемой части AOI; интерфейс явно показывает частичное покрытие. Это демонстрация работы, а не независимая оценка качества.*
+*Снимок публичного сервиса: `official-ensemble-v3`, сцена `BS_tr_000159` из открытого train/validation. 1 037,3 га гари в наблюдаемой части AOI; интерфейс явно показывает частичное покрытие. Это демонстрация работы, а не независимая оценка качества.*
 
 Чтобы оценить решение:
 
@@ -74,6 +74,8 @@ git clone https://gitverse.ru/hackrus.experts/kosmo-krasnoiarsk_4_th_try_106.git
 cd firewatch
 ```
 
+Для клонирования без авторизации доступно [публичное зеркало GitHub](https://github.com/foxxed20-ux/firewatch): `git clone https://github.com/foxxed20-ux/firewatch.git firewatch`. Доступ к GitVerse зависит от настроек конкурсного проекта.
+
 ### Веб-интерфейс и API
 
 Локальные проверки выполняются на Python 3.13.5, серверная демонстрация — на Python 3.10.12. CI настроен на Python 3.11; результат его запуска нужно смотреть отдельно. Из корня репозитория:
@@ -88,7 +90,7 @@ python -m uvicorn firewatch_service.api:app --host 127.0.0.1 --port 8000
 
 Откройте [интерфейс](http://127.0.0.1:8000), [Swagger UI](http://127.0.0.1:8000/docs) или [OpenAPI JSON](http://127.0.0.1:8000/openapi.json).
 
-Этот запуск поднимает приложение. **Для анализа нужны [веса](#готовые-веса-кандидата-v2) и каталог сцен:** по умолчанию `model_bundle/` и `data/service/`. Без них приложение сообщает о неготовности, а не создаёт фиктивные предсказания. Пути настраиваются через `FIREWATCH_MODEL_ROOT` и `FIREWATCH_DATA_ROOT`; остальные настройки — в [конфигурации сервиса](firewatch_service/config.py). Для bundle с CNN дополнительно установите CPU-сборку PyTorch: `python -m pip install -r deploy/requirements-cpu.txt`. Подготовка каталога, работа с API, развёртывание и откат описаны в [README_SERVICE.md](README_SERVICE.md).
+Этот запуск поднимает приложение. **Для анализа нужны [веса](#готовые-веса-v3) и каталог сцен:** по умолчанию `model_bundle/` и `data/service/`. Без них приложение сообщает о неготовности, а не создаёт фиктивные предсказания. Пути настраиваются через `FIREWATCH_MODEL_ROOT` и `FIREWATCH_DATA_ROOT`; остальные настройки — в [конфигурации сервиса](firewatch_service/config.py). Для bundle с CNN дополнительно установите CPU-сборку PyTorch: `python -m pip install -r deploy/requirements-cpu.txt`. Подготовка каталога, работа с API, развёртывание и откат описаны в [README_SERVICE.md](README_SERVICE.md).
 
 ### Конкурсный инференс
 
@@ -131,18 +133,18 @@ python train.py --records prepared/records.json --output runs/cnn-v1 --task bs -
 
 Это команды CNN-кандидата, а не обещание одинакового числа эпох при ограничении по времени. Вариант LightGBM и процедура выбора весов описаны в [модельной инструкции](README_MODEL.md). Bundle содержит `manifest.json` и перечисленные в нём файлы весов; он подключается через `--model-dir` для CLI и `FIREWATCH_MODEL_ROOT` для сервиса.
 
-### Готовые веса кандидата v2
+### Готовые веса v3
 
-[Скачать `official-ensemble-v2.zip`](https://firewatch.151.247.25.189.nip.io/downloads/official-ensemble-v2.zip) — 7 600 262 байта; только веса и manifest, без спутниковых данных. Адрес закреплён за этой версией. Из корня проекта:
+[Скачать `official-ensemble-v3.zip`](https://firewatch.151.247.25.189.nip.io/downloads/official-ensemble-v3.zip) — 14 366 427 байт; только веса и manifest, без спутниковых данных. Адрес закреплён за этой версией. Из корня проекта:
 
 ```bash
-curl --fail --location https://firewatch.151.247.25.189.nip.io/downloads/official-ensemble-v2.zip --output official-ensemble-v2.zip
-python -c "import hashlib; from pathlib import Path; p=Path('official-ensemble-v2.zip'); assert hashlib.sha256(p.read_bytes()).hexdigest() == '7e2ec96a3bc3fe39df8d537e9593128606736438c39717ae25a9e2c4bebb00f7', 'SHA-256 mismatch'; print('SHA-256 OK')"
-python -m zipfile -e official-ensemble-v2.zip model_bundle
+curl --fail --location https://firewatch.151.247.25.189.nip.io/downloads/official-ensemble-v3.zip --output official-ensemble-v3.zip
+python -c "import hashlib; from pathlib import Path; p=Path('official-ensemble-v3.zip'); assert hashlib.sha256(p.read_bytes()).hexdigest() == 'bff193672985cbdc5e74a793d91d2224cd887965c6e4497b656523997cac2880', 'SHA-256 mismatch'; print('SHA-256 OK')"
+python -m zipfile -e official-ensemble-v3.zip model_bundle
 python -c "from competition.service_bridge import describe_models; s=describe_models('model_bundle'); print(s); assert s['available']"
 ```
 
-В Windows PowerShell используйте `curl.exe`. Распаковывайте в новый каталог `model_bundle`, чтобы не смешивать версии. Сырые маски совпали побайтово на Windows и Linux CPU. Полный автономный прогон обработал 269 чипов и сформировал 447 строк; независимый валидатор подтвердил формат. Повторный CPU-инференс всех 129 validation-чипов воспроизвёл метрики без изменения. Это повтор сохранённых весов, не повтор обучения с нуля.
+В Windows PowerShell используйте `curl.exe`. Распаковывайте в новый каталог `model_bundle`, чтобы не смешивать версии. Сырые маски v3 совпали побайтово на Windows и Linux CPU. Полный автономный прогон обработал 269 чипов и сформировал 447 строк данных с заголовком за 390,7 с на GPU T4. Повторный CPU-инференс всех 129 validation-чипов воспроизвёл три метрики без изменения. Это повтор сохранённых весов, не повтор обучения с нуля; замер CLI выполнялся при параллельном CPU replay и не является испытанием организаторов. [Доказательства и условия](docs/evaluation.md).
 
 ## Архитектура
 
@@ -179,9 +181,10 @@ Score = 0.35 × F1_AF + 0.35 × IoU_burn + 0.30 × mIoU_severity
 | Кандидат | F1 AF | IoU гари | mIoU степени поражения | Validation Score |
 | :--- | ---: | ---: | ---: | ---: |
 | LightGBM v1 | 0,9021 | 0,5494 | 0,5549 | 0,6745 |
-| AF: CNN + LightGBM; BS: LightGBM с настроенной постобработкой, v2 | **0,9295** | **0,5768** | **0,5851** | **0,7027** |
+| AF: CNN + LightGBM; BS: LightGBM с настроенной постобработкой, v2 | 0,9295 | 0,5768 | 0,5851 | 0,7027 |
+| AF и BS: ансамбли CNN + LightGBM, v3 | **0,9295** | **0,5867** | **0,5884** | **0,7072** |
 
-**Это validation, не закрытый тест.** Пороги, доля ансамбля и множители классов выбраны на этой же выборке; результат может быть оптимистичным. V2 проверен и развёрнут; сравнение дополнительных BS-кандидатов продолжается. Источники и анализ ошибок — в [техническом отчёте](docs/MODEL_REPORT.md); методика и доказательства — в [протоколе оценки](docs/evaluation.md).
+**Это validation, не закрытый тест.** Пороги, доля ансамбля и множители классов выбраны на этой же выборке; результат может быть оптимистичным. Прирост v3 над v2 равен 0,00446; условный bootstrap-интервал включает ноль и не учитывает выбор рецепта. Источники и анализ ошибок — в [техническом отчёте](docs/MODEL_REPORT.md); методика и доказательства — в [протоколе оценки](docs/evaluation.md).
 
 ### Проверки
 
