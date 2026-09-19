@@ -1,0 +1,18 @@
+[Unit]
+Description=FireWatch private-to-public reverse SSH tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=red
+Group=red
+ExecStart=/usr/bin/ssh -NT -i /home/red/firewatch/deploy/tunnel_key -o IdentitiesOnly=yes -o UserKnownHostsFile=/home/red/firewatch/deploy/known_hosts -o StrictHostKeyChecking=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=20 -o ServerAliveCountMax=3 -R 127.0.0.1:18089:127.0.0.1:8089 firewatch-tunnel@151.247.25.189
+Restart=always
+RestartSec=5
+TimeoutStopSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

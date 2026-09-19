@@ -1,0 +1,25 @@
+[Unit]
+Description=FireWatch satellite fire analysis API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=red
+Group=red
+WorkingDirectory=/home/red/firewatch/current
+EnvironmentFile=/home/red/firewatch/shared/service.env
+EnvironmentFile=-/home/red/firewatch/current/release.env
+ExecStart=/home/red/firewatch/venv/bin/python -m uvicorn firewatch_service.api:app --host 127.0.0.1 --port 8089 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+KillMode=control-group
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0027
+MemoryMax=12G
+TasksMax=256
+
+[Install]
+WantedBy=multi-user.target
